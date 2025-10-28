@@ -38,7 +38,9 @@
             --dark-text-primary: #E0E0E0;
             --dark-text-secondary: #8892B0;
             --dark-accent: #6366F1;
-            --dark-border-color: #2A2A3D;
+            
+            /* MODIFICA: Reso il bordo dark mode più "scuro" del box per effetto "liquid glass" */
+            --dark-border-color: #181820; /* Era #222230 */
             
             /* Colori Highlight & Tag (Dark) */
             --dark-highlight-bg: #2A2F4C;
@@ -470,6 +472,8 @@
             <!-- Dark Mode Toggle (Allineato a sinistra) -->
             <div class="p-4 no-print">
                 <div class="theme-switch-wrapper">
+                    <!-- MODIFICA: Aggiunto testo "Modalità" -->
+                    <span class="text-sm font-medium">Modalità</span>
                     <i data-lucide="sun" class="w-4 h-4"></i>
                     <label class="theme-switch" for="theme-toggle">
                         <input type="checkbox" id="theme-toggle" />
@@ -529,8 +533,9 @@
                     Profilo Personale
                 </h3>
                 
-                <!-- EVIDENZIAZIONI RIPRISTINATE -->
-                <div class="space-y-4 text-base leading-relaxed text-primary">
+                <!-- CONTENUTO RIPRISTINATO -->
+                <!-- MODIFICA: Aggiunte classi per creare il box attorno al testo del profilo -->
+                <div class="space-y-4 text-base leading-relaxed text-primary border border-border-color rounded-xl p-5 bg-bg-sidebar skill-card-print">
                     <p>
                         Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.
                     </p>
@@ -543,27 +548,27 @@
                 </div>
             </section>
 
-            <!-- SEZIONE: COMPETENZE -->
+            <!-- SEZIONE COMPETENZE RIPRISTINATA -->
             <section id="competenze">
                 <h3 class="section-title">
                     <i data-lucide="check-square"></i>
                     Competenze
                 </h3>
                 
-                <!-- LAYOUT COMPETENZE MODIFICATO (non più griglia) -->
                 <div id="skills-container" class="space-y-6">
                     <!-- Le competenze saranno generate qui da JS -->
                 </div>
             </section>
 
-            <!-- SEZIONE: PERCORSO -->
+            <!-- SEZIONE PERCORSO RIPRISTINATA -->
             <section id="percorso">
                 <h3 class="section-title">
                     <i data-lucide="briefcase"></i>
                     Percorso
                 </h3>
                 
-                <div id="experience-container" class="space-y-8">
+                <!-- Div corretto per il percorso -->
+                <div id="experience-container" class="space-y-6">
                     <!-- Le esperienze saranno generate qui da JS -->
                 </div>
             </section>
@@ -880,13 +885,11 @@
                 const skillsHtml = exp.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
                 
                 const item = document.createElement('div');
-                item.className = 'border-b border-border-color pb-8';
+                // MODIFICA: Applica lo stile card 'bianca' come per le competenze
+                // Rimuovendo la vecchia logica per 'border-b' e 'pb-8'.
+                // Il container ora ha 'space-y-6'
+                item.className = 'border border-border-color rounded-xl p-5 bg-bg-sidebar skill-card-print';
                 
-                // Rimuovi l'ultimo bordo per l'ultimo elemento
-                if (experienceData.indexOf(exp) === experienceData.length - 1) {
-                     item.className = 'pb-8'; // Niente border-b
-                }
-
                 item.innerHTML = `
                     <div class="mb-2">
                         <h3 class="text-xl font-bold text-primary">${exp.title}</h3>
@@ -911,3 +914,8 @@
     </script>
 </body>
 </html>
+
+
+
+
+
