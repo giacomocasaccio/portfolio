@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<!-- Aggiunto 'dark' in modo dinamico da JS -->
-<html lang="it">
+<html lang="it" class=""> <!-- La classe 'dark' viene aggiunta/rimossa da JS -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,43 +7,41 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Font "Inter" per uno stile pulito e moderno (stile Notion/GitHub) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font "Inter" (stile Notion/GitHub) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         :root {
-            /* Light Mode (default) */
-            --bg-main: #f6f8fa;
-            --bg-sidebar: #ffffff;
-            --bg-content: #ffffff;
-            --text-primary: #1f2328;
-            --text-secondary: #57606a;
-            --accent: #0969da;
-            --border-color: #d0d7de;
-            --highlight-bg: #ddf4ff;
-            --highlight-text: #0550ae;
-            --sidebar-width: 260px;
-            /* --sidebar-width-collapsed: 80px; -- RIMOSSO */
-
-            /* Dark Mode Variables - REVISIONATE (Blu Notte / Indigo) */
-            --dark-bg-main: #11111B; /* Sfondo quasi nero */
-            --dark-bg-sidebar: #1A1A26; /* Sidebar leggermente più chiara (tinta blu-viola) */
-            --dark-bg-content: #1A1A26; /* Contenuto come sidebar */
-            --dark-text-primary: #E0E0E0; /* Testo primario (Grigio chiaro neutro) */
-            --dark-text-secondary: #8892B0; /* Testo secondario (Grigio-blu) */
-            --dark-accent: #6366F1; /* Accento (Indigo-500: "Blu notte con tono viola") */
-            --dark-border-color: #2A2A3D; /* Bordo (Tinta blu-viola scuro) */
-            --dark-highlight-bg: #4F46E5; /* Sfondo evidenziatore (Indigo-600) */
-            --dark-highlight-text: #E0DFFF; /* Testo su evidenziatore (Lavanda chiaro) */
+            --sidebar-width: 280px;
+            --bg-main: #FFFFFF;
+            --bg-sidebar: #F7F7F7;
+            --bg-content: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #5E5E5E;
+            --accent: #007BFF; /* Blu acceso per Light Mode */
+            --border-color: #EAEAEA;
             
-            /* Nuove variabili per tag/menu attivi in dark mode */
-            --dark-accent-bg-subtle: #2A2F4C; /* Sfondo per tag e menu attivo (Blu-viola desaturo) */
-            --dark-accent-border-subtle: #3A3F6C; /* Bordo per tag */
-            --dark-accent-text-subtle: #A0A3F5; /* Testo per tag (per contrasto) */
+            /* Colori Highlight & Tag (Light) */
+            --highlight-bg: #E6F2FF;
+            --highlight-text: #0056B3;
+
+            /* Variabili Dark Mode (Blu Notte / Indigo) */
+            --dark-bg-main: #11111B;
+            --dark-bg-sidebar: #1A1A26;
+            --dark-bg-content: #1A1A26;
+            --dark-text-primary: #E0E0E0;
+            --dark-text-secondary: #8892B0;
+            --dark-accent: #6366F1;
+            --dark-border-color: #2A2A3D;
+            
+            /* Colori Highlight & Tag (Dark) */
+            --dark-highlight-bg: #2A2F4C;
+            --dark-highlight-text: #A0A3F5;
         }
 
         /* Applica le variabili dark mode */
-        .dark {
+        html.dark {
             --bg-main: var(--dark-bg-main);
             --bg-sidebar: var(--dark-bg-sidebar);
             --bg-content: var(--dark-bg-content);
@@ -52,6 +49,8 @@
             --text-secondary: var(--dark-text-secondary);
             --accent: var(--dark-accent);
             --border-color: var(--dark-border-color);
+            
+            /* Aggiorna variabili highlight per dark mode */
             --highlight-bg: var(--dark-highlight-bg);
             --highlight-text: var(--dark-highlight-text);
         }
@@ -60,8 +59,6 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-secondary);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -69,286 +66,348 @@
             color: var(--text-primary);
             font-weight: 600;
         }
+        
+        /* Titoli Sezione (es. "Profilo Personale") */
+        h3.section-title {
+            font-size: 1.75rem; /* 28px */
+            line-height: 2.25rem; /* 36px */
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem; /* 16px */
+            padding-bottom: 0.75rem; /* 12px */
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem; /* 24px */
+        }
+        
+        h3.section-title i {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+        }
 
+        /* Stile Sidebar */
         #sidebar {
             background-color: var(--bg-sidebar);
             border-color: var(--border-color);
-            transition: width 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+            height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            height: 100vh;
             z-index: 40;
-            width: var(--sidebar-width);
-            transform: translateX(-100%); /* Nascosto di default su mobile */
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
         }
         
-        main {
-            transition: margin-left 0.3s ease;
-            background-color: var(--bg-main);
+        #sidebar.open {
+            transform: translateX(0);
         }
 
-        /* Stile link di navigazione */
+        @media (min-width: 768px) {
+            #sidebar {
+                transform: translateX(0);
+                position: sticky;
+                width: var(--sidebar-width);
+            }
+        }
+        
+        /* Stile Link di Navigazione - SPAZIATURA CORRETTA */
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            gap: 1.75rem; /* MODIFICA: 28px di spazio forzato tra icona e testo */
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
             font-weight: 500;
             color: var(--text-secondary);
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
+        
         .nav-link:hover {
-            background-color: var(--bg-main); /* Adattivo light/dark */
+            background-color: var(--border-color);
             color: var(--text-primary);
         }
+
         .nav-link.active-link {
-            background-color: var(--highlight-bg); /* Adattivo light/dark */
+            background-color: var(--highlight-bg);
             color: var(--accent);
             font-weight: 600;
         }
-        .dark .nav-link.active-link {
-            background-color: var(--dark-accent-bg-subtle);
-            color: var(--dark-accent);
-        }
+
         .nav-link i {
             width: 18px;
             height: 18px;
-            margin-right: 16px; /* Aumentato da 12px */
             flex-shrink: 0;
-            /* transition: margin-right 0.3s ease; -- RIMOSSO */
+            /* margin-right rimosso in favore di 'gap' sul parent */
         }
-        .nav-link span, .sidebar-text {
-            /* transition: opacity 0.2s ease; -- RIMOSSO */
-            opacity: 1;
-            white-space: nowrap; /* Aggiunto per fixare collapse */
+        
+        /* Bottoni Menu Mobile */
+        #menu-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            padding: 0.5rem;
         }
-        .contact-text { /* Selettore corretto (era .contact-link span) */
-            /* transition: opacity 0.2s ease; -- RIMOSSO */
-            opacity: 1;
-            white-space: nowrap; /* Aggiunto per fixare collapse */
+        
+        #menu-toggle i {
+             color: var(--text-secondary);
+        }
+        
+        html.dark #menu-toggle i {
+            color: var(--dark-text-secondary);
         }
 
-        /* Bottone Toggle Sidebar (Desktop) -- RIMOSSO
-        #sidebar-toggle {
-            background-color: var(--bg-main);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-        }
-        #sidebar-toggle:hover {
-            background-color: var(--highlight-bg);
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-        */
-
-        /* Bottone Dark Mode */
-        #dark-mode-toggle {
+        #menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            padding: 0.5rem;
             color: var(--text-secondary);
         }
-        #dark-mode-toggle:hover {
+        #menu-close:hover {
             color: var(--text-primary);
         }
-        .dark #dark-mode-toggle .icon-sun { display: none; }
-        .dark #dark-mode-toggle .icon-moon { display: block; }
-        #dark-mode-toggle .icon-sun { display: block; }
-        #dark-mode-toggle .icon-moon { display: none; }
 
+        /* Overlay Mobile */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 30;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        #overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Area Contenuto Principale */
+        #main-content {
+            width: 100%;
+            flex-grow: 1;
+            min-width: 0;
+            padding: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            #main-content {
+                padding: 2.5rem;
+            }
+        }
+        
+        #main-content section {
+            display: none; /* Nascoste di default */
+            animation: fadeIn 0.5s ease;
+        }
+        
+        #main-content section.active-section {
+            display: block; /* Mostra la sezione attiva */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        /* Titolo della pagina principale */
-        .page-title {
+        /* Stile Tag Competenze - COLORI AGGIORNATI */
+        .skill-tag {
+            display: inline-block;
+            background-color: var(--highlight-bg); /* MODIFICA: Usa variabile reattiva */
+            color: var(--highlight-text); /* MODIFICA: Usa variabile reattiva */
+            border: 1px solid transparent; /* MODIFICA: Rimosso bordo */
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600; /* MODIFICA: Allineato a highlight */
+            border-radius: 9999px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        
+        /* Blocco "html.dark .skill-tag" non più necessario */
+        
+        /* Switch Dark Mode (Allineato a sinistra) */
+        .theme-switch-wrapper {
             display: flex;
             align-items: center;
-            gap: 16px; /* Aumentato da 12px a 16px (gap-4) */
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-            margin-bottom: 24px;
+            justify-content: flex-start; /* Allineato a sinistra */
+            gap: 10px;
+            color: var(--text-secondary);
         }
-        .page-title i {
-            width: 28px;
-            height: 28px;
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 44px;
+        }
+        .theme-switch input {
+            display: none;
+        }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 16px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 16px;
+        }
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        /* Header Profilo */
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .profile-image-placeholder {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            border: 4px solid var(--bg-content);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        html.dark .profile-image-placeholder {
+            background-color: var(--dark-border-color);
+            border-color: var(--dark-bg-content);
+        }
+        .profile-header-text h1 {
+            font-size: 2.25rem; /* 36px */
+            line-height: 2.5rem; /* 40px */
+            font-weight: 700;
+        }
+        .profile-header-text h2 {
+            font-size: 1.25rem; /* 20px */
+            line-height: 1.75rem; /* 28px */
+            font-weight: 500;
             color: var(--accent);
         }
-
+        
         /* Stile Evidenziatore */
         .highlight {
             background-color: var(--highlight-bg);
             color: var(--highlight-text);
             padding: 0.1em 0.3em;
             border-radius: 4px;
-            font-weight: 500;
-            display: inline;
-            box-decoration-break: clone;
-            -webkit-box-decoration-break: clone;
+            font-weight: 600;
         }
         
-        /* Stile Tag (Competenze e Strumenti) */
-        .skill-tag {
-            display: inline-block;
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 500;
-            background-color: var(--highlight-bg);
-            color: var(--accent);
-            padding: 2px 8px; /* px-2 py-0.5 */
-            border-radius: 9999px; /* rounded-full */
-            border: 1px solid var(--accent);
-        }
-        .dark .skill-tag {
-             background-color: var(--dark-accent-bg-subtle);
-             color: var(--dark-accent-text-subtle);
-             border: 1px solid var(--dark-accent-border-subtle); /* Bordo specifico dark */
-        }
-        .tool-tag {
-            display: inline-block;
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 500;
-            background-color: var(--bg-main); /* Adattivo */
-            color: var(--text-secondary);
-            padding: 2px 8px; /* px-2 py-0.5 */
-            border-radius: 9999px; /* rounded-full */
-            border: 1px solid var(--border-color); /* Adattivo */
-        }
-
-        /* Blocco Competenze (stile card Notion) */
-        .skill-block {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.25rem; /* p-5 */
-            background-color: var(--bg-content);
-            transition: box-shadow 0.2s ease, background-color 0.3s ease;
-        }
-        .skill-block:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .dark .skill-block:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        /* Blocco Esperienza (Timeline pulita) */
-        .experience-item {
-            position: relative;
-            padding-bottom: 2rem; /* pb-8 */
-            border-bottom: 1px solid var(--border-color);
-        }
-        .experience-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        /* Nascondi scrollbar ma permetti lo scorrimento */
-        .main-content::-webkit-scrollbar {
-            display: none;
-        }
-        .main-content {
-            -ms-overflow-style: none; /* IE e Edge */
-            scrollbar-width: none; /* Firefox */
-        }
-        
-        /* ========================== */
-        /* GESTIONE RESPONSIVE E SIDEBAR */
-        /* ========================== */
-        
-        /* Mobile (default) */
-        #sidebar.open {
-            transform: translateX(0);
-        }
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 30;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-        }
-        #overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Desktop */
         @media (min-width: 768px) {
-            #sidebar {
-                transform: translateX(0); /* Sempre visibile */
+             .profile-header {
+                flex-direction: row;
+                text-align: left;
+             }
+        }
+        
+        @media print {
+            body {
+                font-family: 'Times New Roman', serif;
             }
-            main {
-                margin-left: var(--sidebar-width);
+            #sidebar, #menu-toggle, #menu-close, .theme-switch-wrapper, .no-print {
+                display: none !important;
             }
-            #menu-toggle { display: none; } /* Nascondi hamburger */
-            #overlay { display: none; } /* Nascondi overlay */
-
-            /* Stili Sidebar Collapsed (solo Desktop) -- RIMOSSI
-            body.sidebar-collapsed #sidebar {
-                width: var(--sidebar-width-collapsed);
+            #main-content {
+                padding: 0;
+                width: 100%;
             }
-            body.sidebar-collapsed main {
-                margin-left: var(--sidebar-width-collapsed);
+            #main-content section {
+                display: block !important;
+                margin-bottom: 2rem;
             }
-            body.sidebar-collapsed #sidebar .nav-link span,
-            body.sidebar-collapsed #sidebar .sidebar-text,
-            body.sidebar-collapsed #sidebar .contact-text { 
-                opacity: 0;
-                visibility: hidden;
+            .profile-header {
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #000;
             }
-            body.sidebar-collapsed #sidebar .nav-link,
-            body.sidebar-collapsed #sidebar .contact-link {
-                justify-content: center;
+            .profile-image-placeholder {
+                border: 1px solid #ddd;
             }
-            body.sidebar-collapsed #sidebar .nav-link i,
-            body.sidebar-collapsed #sidebar .contact-link i {
-                margin-right: 0;
+            h3.section-title {
+                border-bottom: 1px solid #999;
+                color: #000;
             }
-            body.sidebar-collapsed #sidebar #sidebar-toggle i {
-                transform: rotate(180deg);
+            h3.section-title i { color: #000; }
+            .skill-tag {
+                border: 1px solid #ccc;
+                background-color: #e0e0e0 !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
             }
-            body.sidebar-collapsed #sidebar .dark-mode-container {
-                justify-content: center;
+            .highlight {
+                background-color: #e0e0e0 !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
             }
-            */
         }
 
     </style>
 </head>
-<body class="bg-main text-base">
+<body class="bg-main">
 
     <!-- Overlay per chiusura menu mobile -->
     <div id="overlay" class="md:hidden"></div>
 
     <!-- Bottone Hamburger Menu (solo mobile) -->
-    <button id="menu-toggle" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-dark-bg-sidebar rounded-md shadow-md">
-        <i data-lucide="menu" class="w-6 h-6 text-primary"></i>
+    <button id="menu-toggle" class="md:hidden">
+        <i data-lucide="menu" class="w-6 h-6"></i>
     </button>
 
     <div class="flex relative min-h-screen">
-        
+
         <!-- ========================== -->
         <!-- SIDEBAR DI NAVIGAZIONE (Stile Notion) -->
         <!-- ========================== -->
-        <nav id="sidebar" class="w-full md:w-[var(--sidebar-width)] p-5 border-r flex flex-col flex-shrink-0">
+        <nav id="sidebar" class="w-full md:w-[var(--sidebar-width)] p-5 border-r border-border-color flex flex-col flex-shrink-0">
             
-            <!-- Bottone Collapse (solo Desktop) -- RIMOSSO
-            <button id="sidebar-toggle" class="hidden md:block absolute top-4 -right-4 z-50 p-1.5 rounded-full shadow-md">
-                <i data-lucide="chevron-left" class="w-5 h-5 transition-transform duration-300"></i>
+            <!-- Bottone Chiusura Mobile -->
+            <button id="menu-close" class="md:hidden">
+                <i data-lucide="x" class="w-6 h-6"></i>
             </button>
-            -->
-
-            <!-- Logo/Nome -->
-            <div class="px-3 pt-3 md:pt-0">
-                <h1 class="text-lg font-bold sidebar-text">Giacomo Casaccio</h1>
-                <p class="text-sm text-secondary sidebar-text">Digital Marketing Strategist</p>
-            </div>
             
+            <!-- Intestazione Sidebar -->
+            <div class="px-3 mb-4">
+                <h1 class="text-xl font-bold text-primary">Giacomo Casaccio</h1>
+            </div>
+
             <!-- Menu Principale -->
-            <ul id="main-menu" class="mt-6 space-y-1">
+            <ul id="main-menu" class="mt-2 space-y-1">
                 <li>
                     <a href="#profilo" class="nav-link active-link">
                         <i data-lucide="user-round"></i>
@@ -357,7 +416,7 @@
                 </li>
                 <li>
                     <a href="#competenze" class="nav-link">
-                        <i data-lucide="layout-grid"></i>
+                        <i data-lucide="check-square"></i>
                         <span>Competenze</span>
                     </a>
                 </li>
@@ -367,302 +426,452 @@
                         <span>Percorso</span>
                     </a>
                 </li>
-                <!-- NUOVO LINK PDF -->
                 <li>
-                    <a href="cv.html" target="_blank" class="nav-link">
+                    <a href="Giacomo_Casaccio_CV.pdf" target="_blank" class="nav-link">
                         <i data-lucide="download"></i>
                         <span>Scarica CV</span>
                     </a>
                 </li>
             </ul>
             
-            <!-- Dark Mode Toggle -->
-            <div class="mt-auto pt-6 dark-mode-container flex items-center justify-between px-3">
-                <span class="text-sm font-medium text-secondary sidebar-text">Modalità</span>
-                <button id="dark-mode-toggle" class="p-1 rounded-md hover:bg-main">
-                    <i data-lucide="sun" class="w-5 h-5 icon-sun"></i>
-                    <i data-lucide="moon" class="w-5 h-5 icon-moon"></i>
-                </button>
+            <!-- Spacer -->
+            <div class="flex-grow"></div>
+            
+            <!-- Dark Mode Toggle (Allineato a sinistra) -->
+            <div class="p-4 no-print">
+                <div class="theme-switch-wrapper">
+                    <i data-lucide="sun" class="w-4 h-4"></i>
+                    <label class="theme-switch" for="theme-toggle">
+                        <input type="checkbox" id="theme-toggle" />
+                        <span class="slider round"></span>
+                    </label>
+                    <i data-lucide="moon" class="w-4 h-4"></i>
+                </div>
             </div>
 
-            <!-- Contatti in fondo alla sidebar -->
-            <div class="pt-4 mt-4 border-t border-border-color">
-                <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3 sidebar-text">Contatti</h3>
-                <div class="space-y-1 text-sm">
-                    <!-- Email modificata -->
-                    <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center text-secondary hover:text-accent p-2 rounded-md hover:bg-main contact-link">
-                        <i data-lucide="mail" class="w-4 h-4 mr-2.5 flex-shrink-0"></i>
-                        <span class="truncate contact-text">Email</span>
+            <!-- Contatti Sidebar (RIPRISTINATI) -->
+            <div class="border-t border-border-color p-3">
+                <h4 class="text-xs font-semibold text-secondary uppercase tracking-wider mb-3 px-3">Contatti</h4>
+                <!-- La classe .nav-link gestisce già lo spazio tra icona e testo -->
+                <div class="space-y-1">
+                    <a href="mailto:giacomo.casaccio@gmail.com" class="nav-link">
+                        <i data-lucide="mail"></i>
+                        <span>Email</span>
                     </a>
-                    <span class="flex items-center text-secondary p-2 contact-link">
-                        <i data-lucide="phone" class="w-4 h-4 mr-2.5 flex-shrink-0"></i>
-                        <span class="contact-text">333.1293314</span>
-                    </span>
-                    <span class="flex items-center text-secondary p-2 contact-link">
-                        <i data-lucide="map-pin" class="w-4 h-4 mr-2.5 flex-shrink-0"></i>
-                        <span class="contact-text">Rovato (BS)</span>
-                    </span>
-                    <a href="https://www.linkedin.com/in/giacomo-casaccio-0b980967/?originalSubdomain=it" target="_blank" class="flex items-center text-secondary hover:text-accent p-2 rounded-md hover:bg-main contact-link">
-                        <i data-lucide="linkedin" class="w-4 h-4 mr-2.5 flex-shrink-0"></i>
-                        <span class="contact-text">LinkedIn</span>
+                    <a href="https://www.linkedin.com/in/giacomo-casaccio-0b980967/?originalSubdomain=it" target="_blank" class="nav-link">
+                        <i data-lucide="linkedin"></i>
+                        <span>LinkedIn</span>
                     </a>
+                    <div class="nav-link">
+                        <i data-lucide="phone"></i>
+                        <span>333.1293314</span>
+                    </div>
+                    <div class="nav-link">
+                        <i data-lucide="map-pin"></i>
+                        <span>Rovato (BS)</span>
+                    </div>
                 </div>
             </div>
         </nav>
-        
+
         <!-- ========================== -->
         <!-- AREA CONTENUTO PRINCIPALE -->
         <!-- ========================== -->
-        <main class="main-content flex-1 h-screen overflow-y-auto p-6 md:p-10 lg:p-12">
-            <!-- Contenitore stretto (stile Notion/Blog) -->
-            <div class="max-w-3xl mx-auto">
-                
-                <!-- SEZIONE: PROFILO -->
-                <section id="profilo" class="content-section">
-                    <h2 class="page-title">
-                        <i data-lucide="user-round"></i>
-                        Profilo Personale
-                    </h2>
-                    
-                    <div class="space-y-4 text-base leading-relaxed text-primary">
-                        <p>
-                            Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.
-                        </p>
-                        <p>
-                            Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.
-                        </p>
-                        <p>
-                            Sono abituato a operare in contesti dinamici e a gestire progetti complessi, coordinando team interfunzionali e ottimizzando i budget per massimizzare il <span class="highlight">ritorno sull'investimento</span>. La mia esperienza spazia dalla lead generation B2C all'automazione dei processi, sempre con un focus sull'innovazione e il miglioramento continuo.
-                        </p>
-                    </div>
-                </section>
-                
-                <!-- SEZIONE: COMPETENZE -->
-                <section id="competenze" class="content-section hidden">
-                    <h2 class="page-title">
-                        <i data-lucide="layout-grid"></i>
-                        Competenze & Strumenti
-                    </h2>
-                    <!-- Contenitore per le skill generate da JS -->
-                    <div id="skills-container" class="mt-6 space-y-5">
-                        <!-- Le skill verranno inserite qui -->
-                    </div>
-                </section>
+        <main id="main-content" class="bg-content">
 
-                <!-- SEZIONE: PERCORSO -->
-                <section id="percorso" class="content-section hidden">
-                    <h2 class="page-title">
-                        <i data-lucide="briefcase"></i>
-                        Percorso Professionale
-                    </h2>
-                    <!-- Contenitore per la timeline generata da JS -->
-                    <div id="timeline-container" class="mt-6 space-y-8">
-                        <!-- Le esperienze verranno inserite qui -->
+            <!-- SEZIONE: PROFILO -->
+            <section id="profilo" class="active-section">
+                
+                <!-- Header Profilo -->
+                <div class="profile-header">
+                    <div class="profile-image-placeholder">
+                        <!-- Sostituisci questo div con: <img src="tua-foto.jpg" class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-dark-bg-content shadow-md"> -->
+                        <i data-lucide="image" class="w-16 h-16 text-gray-400 dark:text-gray-600"></i>
                     </div>
-                </section>
+                    <div class="profile-header-text">
+                        <h1>Giacomo Casaccio</h1>
+                        <h2 class="text-accent">Digital Marketing Strategist</h2>
+                    </div>
+                </div>
 
-            </div>
+                <h3 class="section-title">
+                    <i data-lucide="user-round"></i>
+                    Profilo Personale
+                </h3>
+                
+                <!-- EVIDENZIAZIONI RIPRISTINATE -->
+                <div class="space-y-4 text-base leading-relaxed text-primary">
+                    <p>
+                        Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.
+                    </p>
+                    <p>
+                        Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.
+                    </p>
+                    <p>
+                        Sono abituato a operare in contesti dinamici e a gestire progetti complessi, coordinando team interfunzionali e ottimizzando i budget per massimizzare il <span class="highlight">ritorno sull'investimento</span>. La mia esperienza spazia dalla lead generation B2C all'automazione dei processi, sempre con un focus sull'innovazione e il miglioramento continuo.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SEZIONE: COMPETENZE -->
+            <section id="competenze">
+                <h3 class="section-title">
+                    <i data-lucide="check-square"></i>
+                    Competenze
+                </h3>
+                
+                <!-- LAYOUT COMPETENZE MODIFICATO (non più griglia) -->
+                <div id="skills-container" class="space-y-6">
+                    <!-- Le competenze saranno generate qui da JS -->
+                </div>
+            </section>
+
+            <!-- SEZIONE: PERCORSO -->
+            <section id="percorso">
+                <h3 class="section-title">
+                    <i data-lucide="briefcase"></i>
+                    Percorso
+                </h3>
+                
+                <div id="experience-container" class="space-y-8">
+                    <!-- Le esperienze saranno generate qui da JS -->
+                </div>
+            </section>
+
         </main>
     </div>
 
     <script>
         // =================================================================
-        // AREA DI PERSONALIZZAZIONE DEI CONTENUTI
-        // (I dati sono gli stessi del tuo CV originale)
+        // DATABASE (Contenuti)
         // =================================================================
 
         const skillsData = [
-            { icon: 'compass', title: 'Digital Strategy', description: 'Dall\'analisi di mercato alla definizione di funnel e customer journey, costruisco piani d\'azione digitali che portano a risultati misurabili e sostenibili nel tempo.', tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'Excel'] },
-            { icon: 'megaphone', title: 'Marketing & Comms', description: 'Gestisco la comunicazione integrata del brand, assicurando coerenza tra canali online e offline e costruendo una narrazione di marca forte e riconoscibile.', tools: ['Mailchimp', 'Mailup', 'WordPress', 'Jira', 'Notion', 'Microsoft Project'] },
-            { icon: 'mouse-pointer-click', title: 'Performance ADV', description: 'Specialista in campagne a performance su Google Ads, Meta Ads e Bing Ads. Ottimizzo budget e creatività per massimizzare ROI, ROAS e CPL.', tools: ['Google Ads', 'META Ads Suite', 'Google Tag Manager', 'Bing Ads'] },
-            { icon: 'palette', title: 'Graphic & Web Design', description: 'Progetto interfacce web e materiali di comunicazione (ATL/BTL) che uniscono estetica moderna e usabilità, mettendo sempre l\'esperienza utente al centro.', tools: ['Adobe Photoshop', 'Adobe Illustrator', 'Adobe InDesign', 'Figma', 'FinalCut'] },
-            { icon: 'target', title: 'Lead Generation & CRM', description: 'Progetto e implemento sistemi di lead generation e ne gestisco il flusso all\'interno di software CRM per alimentare costantemente la pipeline di vendita.', tools: ['Microsoft365', 'SugarCRM', 'Instapages', 'Zapier'] },
-            { icon: 'settings-2', title: 'Marketing Automation', description: 'Sviluppo flussi di automazione per il nurturing dei lead, la gestione del cliente e l\'ottimizzazione dei processi interni, migliorando efficienza e conversioni.', tools: ['MicrosoftDynamics', 'ActiveCampaign'] }
+            { 
+                icon: 'compass', 
+                title: 'Digital Strategy', 
+                description: 'Dall\'analisi di mercato alla definizione di funnel e customer journey, costruisco piani d\'azione digitali che portano a risultati misurabili e sostenibili nel tempo.',
+                tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'Excel']
+            },
+            { 
+                icon: 'megaphone', 
+                title: 'Marketing & Comms', 
+                description: 'Gestisco la comunicazione integrata del brand, assicurando coerenza tra canali online e offline e costruendo una narrazione di marca forte e riconoscibile.',
+                tools: ['Mailchimp', 'Mailup', 'WordPress', 'Jira', 'Notion', 'Microsoft Project']
+            },
+            { 
+                icon: 'mouse-pointer-click', 
+                title: 'Performance ADV', 
+                description: 'Specialista in campagne a performance su Google Ads, Meta Ads e Bing Ads. Ottimizzo budget e creatività per massimizzare ROI, ROAS e CPL.',
+                tools: ['Google Ads', 'META Ads Suite', 'Google Tag Manager', 'Bing Ads'] 
+            },
+            { 
+                icon: 'palette', 
+                title: 'Graphic & Web Design', 
+                description: 'Progetto interfacce web e materiali di comunicazione (ATL/BTL) che uniscono estetica moderna e usabilità, mettendo sempre l\'esperienza utente al centro.',
+                tools: ['Adobe Photoshop', 'Adobe Illustrator', 'Adobe InDesign', 'Figma', 'FinalCut']
+            },
+            { 
+                icon: 'target', 
+                title: 'Lead Generation & CRM', 
+                description: 'Progetto e implemento sistemi di lead generation e ne gestisco il flusso all\'interno di software CRM per alimentare costantemente la pipeline di vendita.',
+                tools: ['Microsoft365', 'SugarCRM', 'Instapages', 'Zapier']
+            },
+            { 
+                icon: 'settings-2', 
+                title: 'Marketing Automation', 
+                description: 'Sviluppo flussi di automazione per il nurturing dei lead, la gestione del cliente e l\'ottimizzazione dei processi interni, migliorando efficienza e conversioni.',
+                tools: ['MicrosoftDynamics', 'ActiveCampaign']
+            }
         ];
 
         const experienceData = [
-            { title: 'Digital Sales & Marketing Specialist', company: 'Vivi Energia', period: '2023 - Oggi', description: ['Gestione delle vendite digitali e canali di acquisizione online.', 'Sviluppo e ottimizzazione campagne marketing (focus: Google Ads, Meta Ads, Bing Ads).', 'Analisi performance campagne e reporting (ROI, CPA, Conversion Rate).', 'Sviluppo e manutenzione del sito web aziendale.', 'Implementazione strategie SEO e SEM.', 'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot su sito web.', 'Collaborazione con team Sales per allineamento strategie.'], skills: ['Digital Strategy', 'Performance ADV', 'Lead Generation & CRM', 'Graphic & Web Design', 'Marketing Automation'] },
-            { title: 'Digital Marketing Strategist', company: 'Bonera Group', period: '2018 - 2023', description: ['Pianificazione strategie digitali e gestione budget marketing.', 'Sviluppo e gestione campagne commerciali omnicanale.', 'Creazione reportistica e analisi delle performance.', 'Sviluppo e gestione progetti di Marketing Automation.', 'Ottimizzazione dei processi di lead generation.', 'Creazione grafiche ATL+BTL.'], skills: ['Digital Strategy', 'Performance ADV', 'Marketing Automation', 'Lead Generation & CRM'] },
-            { title: 'Freelance Web & Digital Consultant', company: 'Lavoro Autonomo', period: '2018 - Oggi', description: ['Creazione di siti web per professionisti e PMI.', 'Sviluppo di loghi e brand identity.', 'Gestione dei contenuti e servizi fotografici/video.', 'Social Media Management e campagne advertising.', 'Servizi di consulenza strategica digitale.'], skills: ['Graphic & Web Design', 'Digital Strategy', 'Performance ADV'] },
-            { title: 'Digital Media & Social media', company: '1000 Miglia & AliSolidali', period: '2015 - 2017', description: ['Creazione di progetti di Corporate Social Responsibility.', 'Sviluppo di Loghi e Brand Identity per iniziative benefiche.', 'Gestione Campagne Social Media per eventi charity.', 'Content Creator eventi/gara (1000Miglia Charity, etc.).'], skills: ['Marketing & Comms', 'Graphic & Web Design'] },
-            { title: 'Graphic Designer e Social Media Manager', company: 'Bonera Group', period: '2015 - 2017', description: ['Supporto grafico per materiali ATL e BTL.', 'Gestione operativa dei canali social media aziendali.', 'Creazione di contenuti foto e video.', 'Supporto alla gestione di eventi e al sito web.', 'Implementazione delle prime campagne di Digital e Email Marketing.'], skills: ['Graphic & Web Design', 'Marketing & Comms'] },
+            { 
+                title: 'Digital Sales & Marketing Specialist', 
+                company: 'Vivi Energia',
+                period: '2023 - Oggi',
+                description: [
+                    'Gestione delle vendite digitali e canali di acquisizione online.', 
+                    'Sviluppo e ottimizzazione campagne marketing (focus: Google Ads, Meta Ads, Bing Ads).', 
+                    'Analisi performance campagne e reporting (ROI, CPA, Conversion Rate).', 
+                    'Sviluppo e manutenzione del sito web aziendale.',
+                    'Implementazione strategie SEO e SEM.', 
+                    'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot su sito web.', 
+                    'Collaborazione con team Sales per allineamento strategie.' 
+                ],
+                skills: ['Digital Strategy', 'Performance ADV', 'Lead Generation & CRM', 'Graphic & Web Design', 'Marketing Automation'] 
+            },
+            { 
+                title: 'Digital Marketing Strategist', 
+                company: 'Bonera Group',
+                period: '2018 - 2023', 
+                description: [
+                    'Pianificazione strategie digitali e gestione budget marketing.',
+                    'Sviluppo e gestione campagne commerciali omnicanale.',
+                    'Creazione reportistica e analisi delle performance.',
+                    'Sviluppo e gestione progetti di Marketing Automation.',
+                    'Ottimizzazione dei processi di lead generation.',
+                    'Creazione grafiche ATL+BTL.' 
+                ],
+                skills: ['Digital Strategy', 'Performance ADV', 'Marketing Automation', 'Lead Generation & CRM']
+            },
+            { 
+                title: 'Freelance Web & Digital Consultant',
+                company: 'Lavoro Autonomo', 
+                period: '2018 - Oggi',
+                description: [
+                    'Creazione di siti web per professionisti e PMI.',
+                    'Sviluppo di loghi e brand identity.',
+                    'Gestione dei contenuti e servizi fotografici/video.',
+                    'Social Media Management e campagne advertising.',
+                    'Servizi di consulenza strategica digitale.'
+                ],
+                skills: ['Graphic & Web Design', 'Digital Strategy', 'Performance ADV']
+            },
+            { 
+                title: 'Digital Media & Social media',
+                company: '1000 Miglia & AliSolidali',
+                period: '2015 - 2017',
+                description: [
+                    'Creazione di progetti di Corporate Social Responsibility.',
+                    'Sviluppo di Loghi e Brand Identity per iniziative benefiche.',
+                    'Gestione Campagne Social Media per eventi charity.',
+                    'Content Creator eventi/gara (1000Miglia Charity, etc.).'
+                ],
+                skills: ['Marketing & Comms', 'Graphic & Web Design']
+            },
+            { 
+                title: 'Graphic Designer e Social Media Manager',
+                company: 'Bonera Group',
+                period: '2015 - 2017',
+                description: [
+                    'Supporto grafico per materiali ATL e BTL.',
+                    'Gestione operativa dei canali social media aziendali.',
+                    'Creazione di contenuti foto e video.',
+                    'Supporto alla gestione di eventi e al sito web.',
+                    'Implementazione delle prime campagne di Digital e Email Marketing.'
+                ],
+                skills: ['Graphic & Web Design', 'Marketing & Comms']
+            },
         ];
 
-
         // =================================================================
-        // CODICE PER IL FUNZIONAMENTO DELLA PAGINA
+        // LOGICA DI RENDER E INTERATTIVITÀ
         // =================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            setupNavigation();
             renderSkills();
             renderExperience();
-            setupNavigation();
+            setupThemeToggle();
             setupMobileMenu();
-            setupTheme(); // NUOVO: Gestione Dark Mode
-            /* setupSidebarToggle(); -- RIMOSSO */
             
-            // Crea tutte le icone Lucide
-            lucide.createIcons();
+            // Gestione stato iniziale (hash o default)
+            const currentHash = window.location.hash || '#profilo';
+            const defaultSection = document.querySelector(currentHash);
+            
+            if (defaultSection) {
+                defaultSection.classList.add('active-section');
+            } else {
+                // Fallback se l'hash non è valido
+                document.querySelector('#profilo').classList.add('active-section');
+            }
+            
+            // Attiva il link di navigazione corretto
+            const defaultLink = document.querySelector(`.nav-link[href="${currentHash}"]`);
+            if (defaultLink) {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-link'));
+                defaultLink.classList.add('active-link');
+            } else {
+                 document.querySelector('.nav-link[href="#profilo"]').classList.add('active-link');
+            }
         });
-
-        // Gestione della navigazione "single-page"
+        
+        // Gestione Navigazione Sezioni
         function setupNavigation() {
-            const links = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('.content-section');
+            const links = document.querySelectorAll('#main-menu .nav-link');
+            const sections = document.querySelectorAll('#main-content section');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
+            const toggleBtn = document.getElementById('menu-toggle');
 
             links.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
                     
-                    const targetId = link.getAttribute('href').substring(1);
-                    
-                    // Gestisci link attivi
-                    links.forEach(l => l.classList.remove('active-link'));
-                    link.classList.add('active-link');
-                    
-                    // Mostra/Nascondi sezioni
-                    sections.forEach(section => {
-                        if (section.id === targetId) {
-                            section.classList.remove('hidden');
-                        } else {
-                            section.classList.add('hidden');
+                    // Solo per link interni (sezioni)
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        
+                        // Gestione sezioni
+                        sections.forEach(section => section.classList.remove('active-section'));
+                        const activeSection = document.querySelector(href);
+                        if(activeSection) activeSection.classList.add('active-section');
+                        
+                        // Gestione link attivi
+                        links.forEach(l => l.classList.remove('active-link'));
+                        this.classList.add('active-link');
+                        
+                        // Aggiorna URL hash
+                        window.history.pushState(null, null, href);
+
+                        // Chiudi il menu mobile dopo aver cliccato
+                        if (window.innerWidth < 768) {
+                            closeMenu();
                         }
-                    });
 
-                    // Chiudi il menu mobile dopo aver cliccato
-                    if (window.innerWidth < 768) {
-                        sidebar.classList.remove('open');
-                        overlay.classList.remove('open');
+                        // Scrolla in cima alla pagina del contenuto
+                        document.getElementById('main-content').scrollTop = 0;
                     }
-
-                    // Scrolla in cima alla pagina del contenuto
-                    document.querySelector('.main-content').scrollTop = 0;
                 });
             });
         }
         
+        // Gestione hash change (es. bottoni avanti/indietro browser)
+        window.addEventListener('hashchange', () => {
+             const currentHash = window.location.hash || '#profilo';
+             const sections = document.querySelectorAll('#main-content section');
+             sections.forEach(section => section.classList.remove('active-section'));
+             
+             const activeSection = document.querySelector(currentHash);
+             if(activeSection) activeSection.classList.add('active-section');
+
+             const links = document.querySelectorAll('#main-menu .nav-link');
+             links.forEach(l => l.classList.remove('active-link'));
+             
+             const activeLink = document.querySelector(`.nav-link[href="${currentHash}"]`);
+             if(activeLink) activeLink.classList.add('active-link');
+        });
+
+        // Funzione unica per chiudere il menu mobile
+        function closeMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const toggleBtn = document.getElementById('menu-toggle');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggleBtn.classList.remove('hidden'); // Mostra hamburger
+        }
+
         // Gestione menu mobile (hamburger)
         function setupMobileMenu() {
             const toggleBtn = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('menu-close');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
+            // Apri menu
             toggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('open');
+                sidebar.classList.add('open');
+                overlay.classList.add('open');
+                toggleBtn.classList.add('hidden'); // Nascondi hamburger
             });
 
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('open');
-            });
+            // Chiudi menu (con 'X')
+            closeBtn.addEventListener('click', closeMenu);
+
+            // Chiudi menu (con overlay)
+            overlay.addEventListener('click', closeMenu);
         }
 
-        /* NUOVO: Gestione Collapse Sidebar (Desktop) -- RIMOSSA
-        function setupSidebarToggle() {
-            const toggleBtn = document.getElementById('sidebar-toggle');
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', () => {
-                    document.body.classList.toggle('sidebar-collapsed');
-                });
-            }
-        }
-        */
+        // Gestione Dark/Light Mode
+        function setupThemeToggle() {
+            const toggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
 
-        // NUOVO: Gestione Dark Mode
-        function setupTheme() {
-            const toggleBtn = document.getElementById('dark-mode-toggle');
-            
-            // Applica il tema al caricamento
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
+            // Controlla il tema salvato o quello di sistema
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                html.classList.add('dark');
+                toggle.checked = true;
             } else {
-                document.documentElement.classList.remove('dark');
+                html.classList.remove('dark');
+                toggle.checked = false;
             }
 
-            // Gestisci il click sul toggle
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', () => {
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.theme = 'light';
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.theme = 'dark';
-                    }
-                });
-            }
+            // Ascolta il cambio
+            toggle.addEventListener('change', () => {
+                if (toggle.checked) {
+                    html.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    html.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
         }
 
-
-        // Funzione per popolare le competenze con il nuovo stile
+        // Render Competenze (Layout a lista)
         function renderSkills() {
             const container = document.getElementById('skills-container');
             if (!container) return;
-            container.innerHTML = ''; 
-
+            container.innerHTML = '';
+            
             skillsData.forEach(skill => {
-                const toolsHtml = skill.tools.map(tool => `<span class="tool-tag">${tool}</span>`).join('');
+                const toolsHtml = skill.tools.map(tool => `<span class="skill-tag">${tool}</span>`).join('');
                 
-                const skillHtml = `
-                    <div class="skill-block">
-                        <h3 class="text-lg font-semibold text-primary mb-1 flex items-center">
-                            <i data-lucide="${skill.icon}" class="w-5 h-5 mr-2.5 text-accent flex-shrink-0"></i>
-                            ${skill.title}
-                        </h3>
-                        <p class="text-sm text-secondary mb-3">${skill.description}</p>
-                        <div class="flex flex-wrap gap-1.5">
-                            ${toolsHtml}
-                        </div>
+                const card = document.createElement('div');
+                // Stile full-width, non più card di una griglia
+                card.className = 'border border-border-color rounded-xl p-5 bg-bg-sidebar';
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 mb-3"> <!-- Aumentato gap -->
+                        <i data-lucide="${skill.icon}" class="w-5 h-5 text-accent flex-shrink-0"></i>
+                        <h4 class="text-lg font-bold text-primary">${skill.title}</h4>
+                    </div>
+                    <p class="text-sm mb-4">${skill.description}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${toolsHtml}
                     </div>
                 `;
-                container.innerHTML += skillHtml;
+                container.appendChild(card);
             });
+            lucide.createIcons();
         }
-
-        // Funzione per popolare le esperienze con il nuovo stile
+        
+        // Render Esperienza
         function renderExperience() {
-            const container = document.getElementById('timeline-container');
+            const container = document.getElementById('experience-container');
             if (!container) return;
             container.innerHTML = '';
             
-            experienceData.forEach((exp) => {
-                const descriptionList = exp.description
-                    .map(d => `<li class="flex items-start text-sm text-primary">
-                                <i data-lucide="chevron-right" class="w-4 h-4 mr-1.5 mt-0.5 text-accent flex-shrink-0"></i>
-                                <span>${d}</span>
-                              </li>`)
-                    .join('');
+            experienceData.forEach(exp => {
+                const descriptionHtml = exp.description.map(item => `
+                    <li class="flex items-start gap-3"> <!-- Aumentato gap -->
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-accent flex-shrink-0 mt-1"></i>
+                        <span>${item}</span>
+                    </li>
+                `).join('');
                 
-                const skillsList = exp.skills
-                    .map(s => `<span class="skill-tag">${s}</span>`)
-                    .join('');
-
-                const itemHtml = `
-                    <div class="experience-item">
-                        <p class="text-sm font-medium text-accent">${exp.period}</p>
-                        <h3 class="text-xl font-bold text-primary mt-0.5">${exp.title}</h3>
-                        <p class="text-md font-semibold text-secondary mb-3">${exp.company}</p>
-                        
-                        <ul class="space-y-1.5 mb-4">
-                            ${descriptionList}
-                        </ul>
-                        
-                        <div class="flex flex-wrap gap-2">
-                            ${skillsList}
+                const skillsHtml = exp.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
+                
+                const item = document.createElement('div');
+                item.className = 'border-b border-border-color pb-8';
+                item.innerHTML = `
+                    <div class="mb-2">
+                        <h3 class="text-xl font-bold text-primary">${exp.title}</h3>
+                        <div class="flex flex-col md:flex-row md:items-center md:gap-4 text-secondary text-sm">
+                            <span class="font-semibold text-accent">${exp.company}</span>
+                            <span class="hidden md:inline-block">|</span>
+                            <span>${exp.period}</span>
                         </div>
                     </div>
+                    <ul class="space-y-2 my-4 pl-1 text-primary">
+                        ${descriptionHtml}
+                    </ul>
+                    <div class="flex flex-wrap gap-2">
+                        ${skillsHtml}
+                    </div>
                 `;
-                container.innerHTML += itemHtml;
+                container.appendChild(item);
             });
+            lucide.createIcons();
         }
 
     </script>
 </body>
 </html>
-
-
-
 
