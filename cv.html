@@ -10,9 +10,7 @@
     <!-- Font "Giornalistico" (Tinos=Titoli, Merriweather=Testi) -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- LIBRERIE PER PDF REINSERITE -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- LIBRERIE PDF (html2canvas, jspdf) RIMOSSE -->
     <style>
         :root {
             /* Palette Stile "Editoriale/Verde Scozia" */
@@ -83,11 +81,11 @@
             vertical-align: baseline; /* FIX: Allinea al testo */
         }
 
-        /* Stili di stampa (per fallback Ctrl+P) e per nascondere bottone PDF */
+        /* Stili di stampa per A4 */
         @media print {
             @page {
-                size: auto; 
-                margin: 1cm; 
+                size: A4 portrait;
+                margin: 1.5cm; /* Margini di stampa */
             }
             body {
                 -webkit-print-color-adjust: exact; 
@@ -104,6 +102,11 @@
                 padding: 0 !important;
                 margin: 0 !important;
                 width: 100% !important;
+            }
+            
+            /* Forza interruzione di pagina per la Pagina 2 */
+            #experience-section {
+                page-break-before: always;
             }
             .section-block, .skill-block, .experience-item {
                 page-break-inside: avoid;
@@ -125,17 +128,27 @@
              h1, h2, h3, h4, .font-serif { color: var(--text-primary) !important; }
              body, p, li { color: var(--text-secondary) !important; }
              .text-primary { color: var(--text-primary) !important; }
+             
+             /* Riduci font per adattare a 2 pagine */
+             body {
+                font-size: 9.5pt;
+                line-height: 1.4;
+             }
+             h1 { font-size: 30pt; }
+             h2 { font-size: 16pt; }
+             h3 { font-size: 14pt; }
+             h4 { font-size: 10pt; }
+             .text-sm { font-size: 9.5pt; }
+             .text-xs { font-size: 8.5pt; }
              .skill-tag {
+                 font-size: 8pt;
                  background-color: #f0f0f0 !important; 
                  border: 1px solid #e0e0e0 !important;
                  vertical-align: baseline !important; /* FIX Stampa */
              }
-             /* Stampa evidenziatore */
              .highlight {
                 background-color: var(--highlight-bg-print) !important;
                 color: var(--text-primary) !important;
-                padding: 0.1em 0.3em;
-                border-radius: 3px;
                 vertical-align: baseline !important; /* FIX Stampa */
             }
         }
@@ -143,14 +156,13 @@
 </head>
 <body class="bg-main flex justify-center p-4 md:p-8">
 
-    <!-- Pulsante Download PDF -->
-    <button id="download-pdf-btn" class="no-print fixed bottom-6 right-6 bg-accent text-white p-3 rounded-full shadow-lg hover:bg-cta-hover transition-colors z-50">
-        <i data-lucide="download" class="w-6 h-6"></i>
-    </button>
+    <!-- Rimosso Pulsante Download PDF -->
 
     <!-- Contenitore fluido, rimossa altezza minima fissa -->
     <div class="print-area w-[210mm] max-w-full bg-white shadow-lg p-10 border border-gray-200">
         
+        <!-- ########## PAGINA 1 ########## -->
+
         <!-- INTESTAZIONE -->
         <header class="border-b pb-4 border-gray-300"> 
             <h1 class="text-4xl font-bold text-primary">Giacomo Casaccio</h1>
@@ -214,7 +226,8 @@
 
             
             <!-- ESPERIENZA -->
-            <div class="section-block mt-8"> 
+            <!-- Aggiunto ID per forzare l'interruzione di pagina -->
+            <div id="experience-section" class="section-block mt-8"> 
                  <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 flex items-center">
                     <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>
                     Percorso
@@ -378,7 +391,6 @@
             lucide.createIcons();
             renderSkillsStatic();
             renderExperience();
-            initPDFDownload(); // Attiva la funzione del pulsante PDF
         });
         
          // Funzione per popolare la versione statica delle skill
@@ -454,77 +466,6 @@
             lucide.createIcons();
         }
         
-        // FUNZIONE PDF CORRETTA (LEGGERA E LUNGA)
-        function initPDFDownload() {
-            const pdfButton = document.getElementById('download-pdf-btn');
-            const elementToCapture = document.querySelector('.print-area'); 
-            if (!pdfButton || !elementToCapture) return;
-            
-            const { jsPDF } = window.jspdf;
-
-            pdfButton.addEventListener('click', async () => {
-                const originalIcon = pdfButton.innerHTML;
-                pdfButton.innerHTML = '<i data-lucide="loader-2" class="w-6 h-6 animate-spin"></i>';
-                lucide.createIcons();
-                pdfButton.disabled = true;
-
-                // Nascondi il pulsante per lo screenshot
-                pdfButton.style.display = 'none';
-                
-                // Salva lo stile originale
-                const originalStyles = {
-                    bodyBg: document.body.style.backgroundColor,
-                    areaBg: elementToCapture.style.backgroundColor,
-                    areaShadow: elementToCapture.style.boxShadow,
-                    areaBorder: elementToCapture.style.border
-                };
-
-                // FIX PDF LEGGERO: Applica stili temporanei per la cattura
-                document.body.style.backgroundColor = '#ffffff';
-                elementToCapture.style.backgroundColor = '#ffffff';
-                elementToCapture.style.boxShadow = 'none';
-                elementToCapture.style.border = 'none';
-
-                await new Promise(resolve => setTimeout(resolve, 100)); // Aspetta che il DOM applichi gli stili
-
-                const canvas = await html2canvas(elementToCapture, {
-                    scale: 2, // Scala 2x per testo nitido
-                    useCORS: true,
-                    backgroundColor: '#ffffff', // Sfondo bianco
-                    width: elementToCapture.scrollWidth, 
-                    height: elementToCapture.scrollHeight
-                });
-
-                // Ripristina stili originali
-                pdfButton.style.display = 'flex';
-                document.body.style.backgroundColor = originalStyles.bodyBg;
-                elementToCapture.style.backgroundColor = originalStyles.areaBg;
-                elementToCapture.style.boxShadow = originalStyles.areaShadow;
-                elementToCapture.style.border = originalStyles.areaBorder;
-                
-                const imgData = canvas.toDataURL('image/jpeg', 0.7); // Usa JPEG qualità 70%
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-                
-                const pdfWidth = 210; // A4 width in mm
-                const pdfHeight = (canvasHeight * pdfWidth) / canvasWidth; 
-                
-                const pdf = new jsPDF({
-                    orientation: 'p',
-                    unit: 'mm',
-                    format: [pdfWidth, pdfHeight] // Formato personalizzato lungo
-                });
-
-                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('CV_Giacomo_Casaccio.pdf');
-
-                // Ripristina il pulsante
-                pdfButton.innerHTML = originalIcon;
-                lucide.createIcons();
-                pdfButton.disabled = false;
-            });
-        }
-
     </script>
 </body>
 </html>
