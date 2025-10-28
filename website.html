@@ -14,9 +14,12 @@
     <style>
         :root {
             --sidebar-width: 280px;
-            --bg-main: #FFFFFF;
-            --bg-sidebar: #F7F7F7;
-            --bg-content: #FFFFFF;
+            
+            /* MODIFICA: Invertiti colori per sfondo "grigino" */
+            --bg-main: #F7F7F7; /* Sfondo pagina */
+            --bg-sidebar: #FFFFFF; /* Sfondo box (sidebar, card) */
+            --bg-content: #F7F7F7; /* Sfondo area contenuto (come main) */
+            
             --text-primary: #1A1A1A;
             --text-secondary: #5E5E5E;
             --accent: #007BFF; /* Blu acceso per Light Mode */
@@ -27,9 +30,11 @@
             --highlight-text: #0056B3;
 
             /* Variabili Dark Mode (Blu Notte / Indigo) */
+            /* MODIFICA: Sfondo main e content allineati */
             --dark-bg-main: #11111B;
-            --dark-bg-sidebar: #1A1A26;
-            --dark-bg-content: #1A1A26;
+            --dark-bg-sidebar: #1A1A26; /* Sfondo box (sidebar, card) */
+            --dark-bg-content: var(--dark-bg-main); /* Sfondo area contenuto (come main) */
+            
             --dark-text-primary: #E0E0E0;
             --dark-text-secondary: #8892B0;
             --dark-accent: #6366F1;
@@ -95,6 +100,8 @@
             top: 0;
             left: 0;
             z-index: 40;
+            /* MODIFICA: Larghezza fissa anche su mobile (w-[var(--sidebar-width)] in HTML) */
+            /* La larghezza è gestita in HTML ora */
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
         }
@@ -107,7 +114,7 @@
             #sidebar {
                 transform: translateX(0);
                 position: sticky;
-                width: var(--sidebar-width);
+                /* width: var(--sidebar-width); - Gestito in HTML */
             }
         }
         
@@ -115,7 +122,7 @@
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 1.75rem; /* MODIFICA: 28px di spazio forzato tra icona e testo */
+            gap: 1.75rem; /* 28px di spazio forzato tra icona e testo */
             padding: 10px 12px;
             border-radius: 8px;
             font-size: 0.95rem;
@@ -139,7 +146,6 @@
             width: 18px;
             height: 18px;
             flex-shrink: 0;
-            /* margin-right rimosso in favore di 'gap' sul parent */
         }
         
         /* Bottoni Menu Mobile */
@@ -149,6 +155,11 @@
             right: 1rem;
             z-index: 50;
             padding: 0.5rem;
+            /* Aggiunto sfondo per visibilità su "grigino" */
+            background-color: var(--bg-sidebar); 
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
         }
         
         #menu-toggle i {
@@ -157,6 +168,11 @@
         
         html.dark #menu-toggle i {
             color: var(--dark-text-secondary);
+        }
+        
+        html.dark #menu-toggle {
+             background-color: var(--dark-bg-sidebar); 
+             border-color: var(--dark-border-color);
         }
 
         #menu-close {
@@ -196,6 +212,7 @@
             flex-grow: 1;
             min-width: 0;
             padding: 1.5rem;
+            background-color: var(--bg-content); /* Sfondo grigino */
         }
         
         @media (min-width: 768px) {
@@ -207,6 +224,11 @@
         #main-content section {
             display: none; /* Nascoste di default */
             animation: fadeIn 0.5s ease;
+            
+            /* MODIFICA: Aggiunta max-width per leggibilità */
+            max-width: 896px; /* 4xl di Tailwind */
+            margin-left: auto;
+            margin-right: auto;
         }
         
         #main-content section.active-section {
@@ -221,17 +243,15 @@
         /* Stile Tag Competenze - COLORI AGGIORNATI */
         .skill-tag {
             display: inline-block;
-            background-color: var(--highlight-bg); /* MODIFICA: Usa variabile reattiva */
-            color: var(--highlight-text); /* MODIFICA: Usa variabile reattiva */
-            border: 1px solid transparent; /* MODIFICA: Rimosso bordo */
+            background-color: var(--highlight-bg); 
+            color: var(--highlight-text); 
+            border: 1px solid transparent; 
             padding: 4px 10px;
             font-size: 0.75rem;
-            font-weight: 600; /* MODIFICA: Allineato a highlight */
+            font-weight: 600; 
             border-radius: 9999px;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
-        
-        /* Blocco "html.dark .skill-tag" non più necessario */
         
         /* Switch Dark Mode (Allineato a sinistra) */
         .theme-switch-wrapper {
@@ -297,7 +317,8 @@
             height: 128px;
             border-radius: 50%;
             background-color: var(--border-color);
-            border: 4px solid var(--bg-content);
+            border: 4px solid var(--bg-content); /* Era bg-content, ora è grigino. Meglio usare bg-sidebar (bianco) */
+            border-color: var(--bg-sidebar);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
@@ -305,7 +326,7 @@
         }
         html.dark .profile-image-placeholder {
             background-color: var(--dark-border-color);
-            border-color: var(--dark-bg-content);
+            border-color: var(--dark-bg-sidebar); /* Allineato a bg-sidebar */
         }
         .profile-header-text h1 {
             font-size: 2.25rem; /* 36px */
@@ -338,6 +359,7 @@
         @media print {
             body {
                 font-family: 'Times New Roman', serif;
+                background-color: #FFF !important; /* Forza sfondo bianco stampa */
             }
             #sidebar, #menu-toggle, #menu-close, .theme-switch-wrapper, .no-print {
                 display: none !important;
@@ -345,10 +367,12 @@
             #main-content {
                 padding: 0;
                 width: 100%;
+                background-color: #FFF !important; /* Forza sfondo bianco stampa */
             }
             #main-content section {
                 display: block !important;
                 margin-bottom: 2rem;
+                max-width: 100% !important; /* Rimuovi max-width per stampa */
             }
             .profile-header {
                 padding-bottom: 1rem;
@@ -375,6 +399,11 @@
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact;
             }
+            /* Stampa card competenze su sfondo bianco */
+            .skill-card-print { 
+                 background-color: #FFF !important;
+                 border: 1px solid #DDD !important;
+            }
         }
 
     </style>
@@ -394,7 +423,8 @@
         <!-- ========================== -->
         <!-- SIDEBAR DI NAVIGAZIONE (Stile Notion) -->
         <!-- ========================== -->
-        <nav id="sidebar" class="w-full md:w-[var(--sidebar-width)] p-5 border-r border-border-color flex flex-col flex-shrink-0">
+        <!-- MODIFICA: Tolto 'w-full' e 'md:w-[...]' per usare solo 'w-[var(--sidebar-width)]' -->
+        <nav id="sidebar" class="w-[var(--sidebar-width)] p-5 border-r border-border-color flex flex-col flex-shrink-0">
             
             <!-- Bottone Chiusura Mobile -->
             <button id="menu-close" class="md:hidden">
@@ -477,7 +507,7 @@
         <!-- ========================== -->
         <!-- AREA CONTENUTO PRINCIPALE -->
         <!-- ========================== -->
-        <main id="main-content" class="bg-content">
+        <main id="main-content"> <!-- bg-content è gestito qui e ora è grigino -->
 
             <!-- SEZIONE: PROFILO -->
             <section id="profilo" class="active-section">
@@ -816,7 +846,8 @@
                 
                 const card = document.createElement('div');
                 // Stile full-width, non più card di una griglia
-                card.className = 'border border-border-color rounded-xl p-5 bg-bg-sidebar';
+                // MODIFICA: bg-bg-sidebar ora è bianco in light mode
+                card.className = 'border border-border-color rounded-xl p-5 bg-bg-sidebar skill-card-print'; 
                 card.innerHTML = `
                     <div class="flex items-center gap-4 mb-3"> <!-- Aumentato gap -->
                         <i data-lucide="${skill.icon}" class="w-5 h-5 text-accent flex-shrink-0"></i>
@@ -850,6 +881,12 @@
                 
                 const item = document.createElement('div');
                 item.className = 'border-b border-border-color pb-8';
+                
+                // Rimuovi l'ultimo bordo per l'ultimo elemento
+                if (experienceData.indexOf(exp) === experienceData.length - 1) {
+                     item.className = 'pb-8'; // Niente border-b
+                }
+
                 item.innerHTML = `
                     <div class="mb-2">
                         <h3 class="text-xl font-bold text-primary">${exp.title}</h3>
@@ -874,4 +911,3 @@
     </script>
 </body>
 </html>
-
