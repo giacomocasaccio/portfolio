@@ -241,6 +241,11 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* MODIFICA: Aggiunta regola CSS per lo sfondo dei box */
+        .content-card {
+            background-color: var(--bg-sidebar);
+        }
 
         /* Stile Tag Competenze - COLORI AGGIORNATI */
         .skill-tag {
@@ -535,7 +540,8 @@
                 
                 <!-- CONTENUTO RIPRISTINATO -->
                 <!-- MODIFICA: Aggiunte classi per creare il box attorno al testo del profilo -->
-                <div class="space-y-4 text-base leading-relaxed text-primary border border-border-color rounded-xl p-5 bg-bg-sidebar skill-card-print">
+                <!-- Sostituito 'bg-bg-sidebar' (errato) con 'content-card' (corretto) -->
+                <div class="space-y-4 text-base leading-relaxed text-primary border border-border-color rounded-xl p-5 content-card skill-card-print">
                     <p>
                         Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.
                     </p>
@@ -851,8 +857,8 @@
                 
                 const card = document.createElement('div');
                 // Stile full-width, non più card di una griglia
-                // MODIFICA: bg-bg-sidebar ora è bianco in light mode
-                card.className = 'border border-border-color rounded-xl p-5 bg-bg-sidebar skill-card-print'; 
+                // MODIFICA: Sostituito 'bg-bg-sidebar' (errato) con 'content-card' (corretto)
+                card.className = 'border border-border-color rounded-xl p-5 content-card skill-card-print'; 
                 card.innerHTML = `
                     <div class="flex items-center gap-4 mb-3"> <!-- Aumentato gap -->
                         <i data-lucide="${skill.icon}" class="w-5 h-5 text-accent flex-shrink-0"></i>
@@ -882,13 +888,15 @@
                     </li>
                 `).join('');
                 
+                // FIX: Aggiunte le definizioni mancanti per 'skillsHtml' e 'item'
                 const skillsHtml = exp.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
-                
                 const item = document.createElement('div');
+
                 // MODIFICA: Applica lo stile card 'bianca' come per le competenze
                 // Rimuovendo la vecchia logica per 'border-b' e 'pb-8'.
                 // Il container ora ha 'space-y-6'
-                item.className = 'border border-border-color rounded-xl p-5 bg-bg-sidebar skill-card-print';
+                // Sostituito 'bg-bg-sidebar' (errato) con 'content-card' (corretto)
+                item.className = 'border border-border-color rounded-xl p-5 content-card skill-card-print';
                 
                 item.innerHTML = `
                     <div class="mb-2">
@@ -914,6 +922,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
