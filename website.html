@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giacomo Casaccio | Digital Marketing Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Font NYT Style: Merriweather (Serif) + Lato (Sans-Serif) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            /* Palette Editorial/Heritage */
+            --bg-primary: #f8f6f2; /* Crema/Avorio */
+            --bg-secondary: #ffffff; /* Bianco per pannelli */
+            --text-primary: #333333; /* Grigio Antracite scuro */
+            --text-secondary: #6c757d; /* Grigio medio */
+            --cta-bg: #004d40; /* Verde scuro Barbour/Heritage */
+            --cta-hover: #00382e; /* Verde più scuro per hover */
+            --border-color: #dee2e6; /* Grigio chiaro per bordi */
+            --accent-color: var(--cta-bg);
+            /* Rimosso --nav-indicator color */
+        }
+
+        body {
+            font-family: 'Lato', sans-serif; /* Font corpo Lato */
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* Titoli con Merriweather */
+        h1, h2, h3, .logo-text, .font-serif {
+             font-family: 'Merriweather', serif; 
+        }
+        h1, h2, h3, .font-bold {
+             font-weight: 700; 
+        }
+        h4, h5, h6 { font-weight: 600;} 
+
+
+        .section-title { color: var(--text-primary); }
+        .text-dark { color: var(--text-primary); } 
+        .bg-main { background-color: var(--bg-primary); } 
+        .bg-panel, .bg-panel-opaque { 
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
+        }
+        .border-default { border-color: var(--border-color); }
+        .text-accent { color: var(--accent-color); }
+        .bg-accent-light { background-color: var(--accent-color); opacity: 0.1; }
+
+        .cta-button {
+            background-color: var(--cta-bg);
+            color: white; 
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+       
+        .cta-button:hover {
+            background-color: var(--cta-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* Transizione sezioni rimossa - cambio istantaneo */
+        main section {
+            display: none;
+            /* Rimosso opacity e transition */
+        }
+        main section.active {
+            display: block;
+            /* Rimosso opacity */
+        }
+
+        /* Top Navigation - Stile NYT */
+        header { border-bottom: 1px solid var(--border-color); }
+        #main-nav { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* Centra le voci */
+            flex-grow: 1; /* Occupa spazio disponibile */
+        } 
+        /* Rimosso #nav-indicator */
+         .nav-link {
+            transition: color 0.2s ease; /* Transizione colore più rapida */
+             padding: 6px 16px; /* Aumentato padding laterale */
+             position: relative; 
+             z-index: 1; 
+             display: flex; 
+             align-items: center; 
+             justify-content: center; 
+             height: 38px; 
+             font-weight: 500; 
+             letter-spacing: normal; 
+             text-transform: none; 
+             border-top: 2px solid transparent; /* Spazio per bordo superiore attivo */
+             margin-top: -2px; /* Compensa bordo */
+        }
+         .nav-link span { 
+             display: inline-block;
+             white-space: nowrap; 
+         }
+        .nav-link.active {
+             color: var(--text-primary);
+             font-weight: 600; 
+             border-top-color: var(--accent-color); /* Bordo superiore come indicatore */
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+
+        /* Skills Section New Style */
+        .skill-item.active { background-color: var(--cta-bg); color: white; }
+        .skill-item.active i { color: white; }
+        #skill-details-content { transition: opacity 0.4s ease-in-out; }
+        
+        /* Timeline Style Update - Centering Dot */
+        .timeline-dot { 
+            background-color: var(--accent-color);
+            border: 3px solid var(--bg-secondary); 
+            position: absolute; 
+            left: -2.6rem; 
+            top: 1.7rem; 
+            transform: translateY(0); 
+        }
+
+
+        /* Stili per PDF - Meno aggressivi, permettendo multi-pagina */
+        .pdf-export-mode .pdf-section { 
+            display: block !important; 
+            margin-bottom: 15px !important; 
+            page-break-inside: avoid; 
+        }
+
+        .pdf-export-mode #skills { display: none !important; }
+        .pdf-export-mode #skills-pdf-static { display: block !important; }
+
+        .pdf-export-mode body, .pdf-export-mode .print-area {
+            background: #ffffff !important; 
+            font-size: 9px !important; 
+            line-height: 1.4 !important; 
+             animation: none; 
+             font-family: 'Lato', sans-serif; 
+        }
+         .pdf-export-mode h1, .pdf-export-mode h2, .pdf-export-mode h3, .pdf-export-mode .logo-text, .pdf-export-mode .font-serif {
+             font-family: 'Merriweather', serif !important; 
+         }
+        .pdf-export-mode h2 { font-size: 18px !important; margin-bottom: 8px !important; }
+        .pdf-export-mode h3 { font-size: 14px !important; margin-bottom: 5px !important; }
+        .pdf-export-mode h4 { font-size: 11px !important; margin-bottom: 4px !important; }
+        .pdf-export-mode .p-8 { padding: 12px !important; } 
+        .pdf-export-mode .p-6 { padding: 10px !important; }
+        .pdf-export-mode .mb-8 { margin-bottom: 12px !important; }
+        .pdf-export-mode .mb-6 { margin-bottom: 10px !important; }
+        .pdf-export-mode .mb-4 { margin-bottom: 8px !important; }
+        .pdf-export-mode .mt-12 { margin-top: 18px !important; }
+        .pdf-export-mode .mt-8 { margin-top: 12px !important; }
+        .pdf-export-mode .mt-6 { margin-top: 10px !important; }
+        .pdf-export-mode .mt-4 { margin-top: 8px !important; }
+        .pdf-export-mode .space-y-1 > * + * { margin-top: 3px !important; } 
+        .pdf-export-mode .space-y-2 > * + * { margin-top: 5px !important; }
+        .pdf-export-mode .space-y-6 > * + * { margin-top: 12px !important; }
+        .pdf-export-mode .gap-8 { gap: 12px !important; } 
+        .pdf-export-mode .gap-6 { gap: 10px !important; }
+        .pdf-export-mode .gap-3 { gap: 5px !important; }
+        .pdf-export-mode .w-48 { width: 6rem !important; } 
+        .pdf-export-mode .h-48 { height: 6rem !important; }
+        .pdf-export-mode .leading-relaxed { line-height: 1.4 !important; }
+        .pdf-export-mode .text-sm { font-size: 9px !important; }
+        .pdf-export-mode .text-lg { font-size: 12px !important; }
+        .pdf-export-mode .text-xl { font-size: 13px !important; }
+        .pdf-export-mode .text-2xl { font-size: 15px !important; }
+        .pdf-export-mode .text-3xl { font-size: 18px !important; }
+        .pdf-export-mode .text-4xl { font-size: 20px !important; }
+        .pdf-export-mode .timeline-container { padding-left: 15px !important; } 
+        .pdf-export-mode .timeline-dot { display: none !important; } 
+        .pdf-export-mode .ml-[-1.5rem] { margin-left: 0 !important; } 
+        .pdf-export-mode .no-pdf { display: none !important; }
+        .pdf-export-mode .section-title { color: #333333 !important; } 
+        .pdf-export-mode .text-secondary { color: #6c757d !important; } 
+        .pdf-export-mode .text-accent { color: #004d40 !important; } 
+        .pdf-export-mode .bg-panel, .pdf-export-mode .bg-panel-opaque { 
+             background-color: #ffffff !important; 
+             border: 1px solid #dee2e6 !important; 
+             box-shadow: none !important; 
+             backdrop-filter: none !important; 
+        }
+         .pdf-export-mode #skills-pdf-static .skill-block { margin-bottom: 10px; page-break-inside: avoid;}
+         .pdf-export-mode #skills-pdf-static .skill-title { font-size: 11px !important; font-weight: bold; color: #333333 !important; margin-bottom: 3px; }
+         .pdf-export-mode #skills-pdf-static .skill-description { font-size: 9px !important; color: #6c757d !important; margin-bottom: 4px; }
+         .pdf-export-mode #skills-pdf-static .tools-title { font-size: 10px !important; font-weight: 600; color: #555 !important; margin-top: 5px; margin-bottom: 2px;}
+         .pdf-export-mode #skills-pdf-static .skill-tools-list { list-style: disc; margin-left: 15px; font-size: 8px !important; color: #6c757d !important; }
+         .pdf-export-mode #skills-pdf-static .skill-tools-list li { margin-bottom: 1px;}
+
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="app-container" class="flex flex-col min-h-screen bg-main">
+        
+        <!-- Header / Top Navigation --><header class="sticky top-0 z-30 bg-panel border-b border-default"> 
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-14"> 
+                    <!-- Logo --><div class="flex-shrink-0">
+                        <a href="#home" data-section="home" class="nav-link-js text-2xl font-bold text-dark logo-text">Giacomo C.</a>
+                    </div>
+
+                    <!-- Desktop Navigation --><nav id="main-nav" class="hidden md:flex items-center space-x-4 relative"> <!-- Aumentato space-x -->
+                        <a href="#home" data-section="home" class="nav-link text-sm text-secondary hover:text-primary"><span>Home</span></a>
+                        <a href="#about" data-section="about" class="nav-link text-sm text-secondary hover:text-primary"><span>Chi Sono</span></a>
+                        <a href="#skills" data-section="skills" class="nav-link text-sm text-secondary hover:text-primary"><span>Competenze</span></a>
+                        <a href="#experience" data-section="experience" class="nav-link text-sm text-secondary hover:text-primary"><span>Esperienza</span></a>
+                        <a href="#contact" data-section="contact" class="nav-link text-sm text-secondary hover:text-primary"><span>Contatti</span></a>
+                        <!-- Rimosso indicatore div -->
+                    </nav>
+                    
+                     <!-- Header Buttons (Desktop) --><div class="hidden md:flex items-center space-x-4">
+                        <button id="pdf-button" title="Scarica PDF" class="p-2 rounded-full text-secondary hover:text-primary hover:bg-main">
+                            <i data-lucide="download" class="h-5 w-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Mobile Menu Button --><div class="md:hidden flex items-center">
+                         <button id="pdf-button-mobile" title="Scarica PDF" class="p-2 rounded-full text-secondary hover:text-primary hover:bg-main mr-2">
+                            <i data-lucide="download" class="h-5 w-5"></i>
+                        </button>
+                        <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-secondary hover:text-primary hover:bg-main focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <i data-lucide="menu" class="block h-6 w-6" id="menu-icon-open"></i>
+                            <i data-lucide="x" class="hidden h-6 w-6" id="menu-icon-close"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu, show/hide based on menu state. --><div class="md:hidden hidden bg-panel" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#home" data-section="home" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-main">Home</a>
+                    <a href="#about" data-section="about" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-main">Chi Sono</a>
+                    <a href="#skills" data-section="skills" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-main">Competenze</a>
+                    <a href="#experience" data-section="experience" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-main">Esperienza</a>
+                    <a href="#contact" data-section="contact" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-main">Contatti</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area --><main class="flex-1 overflow-x-hidden overflow-y-auto">
+             <div class="max-w-7xl mx-auto p-6 md:p-10 print-area">
+                <section id="home" class="active pdf-section">
+                    <div class="min-h-[calc(80vh-3.5rem)] flex items-center justify-center text-center"> 
+                        <div>
+                            <h1 class="text-4xl md:text-6xl font-bold section-title leading-tight mb-4">
+                                Strategie Digitali che uniscono Creatività e Risultati.
+                            </h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto text-secondary mb-8">
+                                Trasformo le visioni in successi misurabili. Sono Giacomo Casaccio, il tuo partner nel marketing digitale. Benvenuto nel mio portfolio.
+                            </p>
+                            <div class="flex justify-center space-x-4 no-pdf">
+                                <a href="#experience" class="cta-button nav-link-js font-bold py-3 px-8 rounded-lg shadow-xl" data-section="experience">Le mie esperienze</a>
+                                <a href="#about" class="bg-panel-opaque border border-default text-dark font-bold py-3 px-8 rounded-lg hover:bg-main transition-colors nav-link-js" data-section="about">Chi sono</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="about" class="pdf-section">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title mb-8">Chi Sono</h2>
+                    <div class="bg-panel p-8 rounded-lg">
+                        <div class="grid lg:grid-cols-3 gap-8 items-center">
+                            <div class="lg:col-span-1 text-center">
+                                 <!-- Immagine Profilo Aggiornata -->
+                                 <img src="https://i.imgur.com/uG2GZk8.jpeg" alt="Foto di Giacomo Casaccio" class="rounded-full shadow-lg w-48 h-48 mx-auto mb-6 grayscale object-cover">
+                                 <h3 class="text-2xl font-bold section-title">Giacomo Casaccio</h3>
+                                 <p class="text-secondary">Digital Marketing Strategist</p>
+                            </div>
+                            <div class="lg:col-span-2">
+                                <h3 class="text-2xl font-bold section-title mb-4">La mia storia, in breve.</h3>
+                                <p class="text-secondary mb-4 leading-relaxed">
+                                    Il mio percorso non è lineare, ma è un <strong>intreccio di due passioni: l'arte e la tecnologia</strong>. Dall'Accademia di Belle Arti al mondo del Digital Marketing, ho imparato che una grande idea senza una <strong>strategia solida</strong> è solo un'opera incompiuta, e una strategia senza <strong>creatività non lascia il segno</strong>.
+                                </p>
+                                <p class="text-secondary leading-relaxed">
+                                    Oggi, il mio lavoro è essere un <strong>"traduttore"</strong>: trasformo gli obiettivi di business in campagne creative, i dati in decisioni strategiche e le interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di <strong>guardare oltre i confini</strong> di una singola disciplina.
+                                </p>
+                                <div class="mt-6 no-pdf">
+                                    <a href="#contact" class="cta-button nav-link-js inline-block font-bold py-3 px-6 rounded-lg shadow-lg" data-section="contact">Mettiamoci in contatto</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-12 border-t border-default pt-8 grid md:grid-cols-3 gap-8 text-center">
+                            <div class="md:pr-8">
+                                <i data-lucide="lightbulb" class="h-10 w-10 mx-auto text-accent mb-2"></i>
+                                <h4 class="font-bold text-lg section-title font-serif">Pensiero Strategico</h4>
+                                <p class="text-sm">Analizzo il contesto, definisco gli obiettivi e costruisco la roadmap per raggiungerli.</p>
+                            </div>
+                            <div class="md:border-l md:border-r border-default md:px-8">
+                                <i data-lucide="bar-chart-4" class="h-10 w-10 mx-auto text-accent mb-2"></i>
+                                <h4 class="font-bold text-lg section-title font-serif">Creatività Data-Driven</h4>
+                                <p class="text-sm">Uso i dati per ispirare la creatività e ottimizzare le performance, non per limitarle.</p>
+                            </div>
+                            <div class="md:pl-8">
+                                <i data-lucide="sparkles" class="h-10 w-10 mx-auto text-accent mb-2"></i>
+                                <h4 class="font-bold text-lg section-title font-serif">Innovazione Tecnologica</h4>
+                                <p class="text-sm">Sono costantemente alla ricerca di nuovi strumenti e metodologie per migliorare l'efficienza.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                 <!-- Sezione Competenze Interattiva (nascosta nel PDF) -->
+                 <section id="skills" class="no-pdf">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title mb-2">Competenze & Strumenti</h2>
+                    <p class="text-secondary mb-8">Le mie aree di expertise e la tecnologia che uso per dare vita ai progetti.</p>
+                    <div class="bg-panel rounded-lg lg:grid lg:grid-cols-3 lg:gap-8 p-8">
+                        <div class="lg:col-span-1 border-r border-default pr-8">
+                             <h3 class="text-lg font-semibold section-title mb-4 font-serif">Aree di Competenza</h3>
+                            <ul id="skills-list" class="space-y-1">
+                                <!-- Skill items verranno inseriti qui --></ul>
+                        </div>
+                        <div class="lg:col-span-2 mt-8 lg:mt-0 lg:pl-8">
+                            <div id="skill-details" class="h-full">
+                                <div id="skill-details-content" class="opacity-0">
+                                    <div id="skill-detail-icon-container" class="h-12 w-12 text-accent mb-4">
+                                        <!-- Icona viene inserita qui dinamicamente --></div>
+                                    <h3 id="skill-detail-title" class="text-2xl font-bold section-title mb-2 font-serif"></h3>
+                                    <p id="skill-detail-description" class="text-secondary mb-6 leading-relaxed"></p>
+                                    <h4 class="font-semibold section-title mb-3 font-serif">Strumenti del mestiere:</h4>
+                                    <div id="skill-detail-tools" class="flex flex-wrap gap-3">
+                                        <!-- Tools verranno inseriti qui --></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                 <!-- Sezione Competenze Statica per PDF (visibile solo nel PDF) -->
+                 <section id="skills-pdf-static" class="pdf-section bg-panel rounded-lg p-8" style="display: none;"> 
+                      <h2 class="text-3xl md:text-4xl font-bold section-title mb-8">Competenze & Strumenti</h2>
+                      <!-- Contenuto statico verrà inserito qui da JS -->
+                 </section>
+
+                <section id="experience" class="pdf-section">
+                     <h2 class="text-3xl md:text-4xl font-bold section-title mb-8">Percorso ed Evoluzione</h2>
+                     <div id="timeline-container" class="relative border-l-2 border-default pl-10">
+                        <!-- Le esperienze verranno inserite qui --></div>
+                </section>
+
+                <!-- Sezione Progetti rimossa -->
+
+                <section id="contact" class="pdf-section">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title mb-8 text-center">Contattami</h2>
+                    <p class="text-secondary mb-12 text-center max-w-2xl mx-auto">Hai un progetto in mente o vuoi semplicemente scambiare due chiacchiere? Ecco come puoi trovarmi. Sarò felice di risponderti.</p>
+                    <div class="max-w-lg mx-auto bg-panel p-8 rounded-lg">
+                        <h3 class="text-xl font-bold section-title mb-6 font-serif">Informazioni di contatto</h3>
+                        <div class="space-y-6">
+                            <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center group">
+                                <div class="p-3 rounded-lg mr-4 bg-main border border-default"><i data-lucide="mail" class="w-6 h-6 text-accent"></i></div>
+                                <div>
+                                    <p class="text-sm text-secondary">Email</p>
+                                    <p class="text-dark font-semibold group-hover:text-accent transition-colors">giacomo.casaccio@gmail.com</p>
+                                </div>
+                            </a>
+                             <a href="tel:3331293314" class="flex items-center group">
+                                <div class="p-3 rounded-lg mr-4 bg-main border border-default"><i data-lucide="phone" class="w-6 h-6 text-accent"></i></div>
+                                <div>
+                                    <p class="text-sm text-secondary">Telefono</p>
+                                    <p class="text-dark font-semibold group-hover:text-accent transition-colors">333.1293314</p>
+                                </div>
+                            </a>
+                             <div class="flex items-center">
+                                <div class="p-3 rounded-lg mr-4 bg-main border border-default"><i data-lucide="map-pin" class="w-6 h-6 text-accent"></i></div>
+                                <div>
+                                    <p class="text-sm text-secondary">Indirizzo</p>
+                                    <p class="text-dark font-semibold">Vicolo della Speranza, 1 - Brescia</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="mt-8 border-t border-default pt-6 flex space-x-6">
+                             <a href="#" target="_blank" class="text-secondary hover:text-accent transition-colors"><i data-lucide="linkedin" class="w-8 h-8"></i></a>
+                             <a href="#" target="_blank" class="text-secondary hover:text-accent transition-colors"><i data-lucide="instagram" class="w-8 h-8"></i></a>
+                             <a href="#" target="_blank" class="text-secondary hover:text-accent transition-colors"><i data-lucide="layout-template" class="w-8 h-8"></i></a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // =================================================================
+        // AREA DI PERSONALIZZAZIONE DEI CONTENUTI
+        // =================================================================
+
+        const skillsData = [
+            { 
+                icon: 'compass', 
+                title: 'Digital Strategy', 
+                description: 'Dall\'analisi di mercato alla definizione di funnel e customer journey, costruisco piani d\'azione digitali che portano a risultati misurabili e sostenibili nel tempo.',
+                tools: ['Google Analytics', 'SEMrush', 'SimilarWeb', 'Excel']
+            },
+            { 
+                icon: 'megaphone', 
+                title: 'Marketing & Comms', 
+                description: 'Gestisco la comunicazione integrata del brand, assicurando coerenza tra canali online e offline e costruendo una narrazione di marca forte e riconoscibile.',
+                tools: ['Mailchimp', 'HubSpot', 'WordPress', 'Trello']
+            },
+            { 
+                icon: 'mouse-pointer-click', 
+                title: 'Performance ADV', 
+                description: 'Specialista in campagne a performance su Google Ads, Meta Ads e Bing Ads. Ottimizzo budget e creatività per massimizzare ROI, ROAS e CPL.', // Aggiornata descrizione
+                tools: ['Google Ads', 'META Ads Suite', 'Google Tag Manager', 'Bing Ads'] 
+            },
+            { 
+                icon: 'palette', 
+                title: 'Graphic & Web Design', 
+                description: 'Progetto interfacce web e materiali di comunicazione (ATL/BTL) che uniscono estetica moderna e usabilità, mettendo sempre l\'esperienza utente al centro.',
+                tools: ['Adobe Photoshop', 'Adobe Illustrator', 'Figma', 'Adobe Premiere Pro']
+            },
+            { 
+                icon: 'target', 
+                title: 'Lead Generation & CRM', 
+                description: 'Progetto e implemento sistemi di lead generation e ne gestisco il flusso all\'interno di software CRM per alimentare costantemente la pipeline di vendita.',
+                tools: ['Salesforce', 'HubSpot CRM', 'Leadpages', 'Zapier']
+            },
+            { 
+                icon: 'settings-2', 
+                title: 'Marketing Automation', 
+                description: 'Sviluppo flussi di automazione per il nurturing dei lead, la gestione del cliente e l\'ottimizzazione dei processi interni, migliorando efficienza e conversioni.',
+                tools: ['ActiveCampaign', 'Marketo', 'HubSpot Marketing Hub']
+            }
+        ];
+
+        const experienceData = [
+             { 
+                title: 'Digital Sales & Marketing Specialist', 
+                company: 'Vivi Energia',
+                period: '2023 - Oggi',
+                description: [
+                    'Gestione delle vendite digitali e canali di acquisizione online.', 
+                    'Sviluppo e ottimizzazione campagne marketing multi-canale (focus: Google Ads, Meta Ads, Bing Ads).', 
+                    'Analisi performance campagne e reporting (ROI, CPA, Conversion Rate).', 
+                    'Sviluppo e manutenzione del sito web aziendale.',
+                    'Implementazione strategie SEO e SEM.', 
+                    'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot su sito web.', 
+                    'Collaborazione con team Sales per allineamento strategie.' 
+                ],
+                skills: ['Digital Strategy', 'Performance ADV', 'Lead Generation & CRM', 'Graphic & Web Design', 'Marketing Automation'] 
+            },
+            { 
+                title: 'Digital Marketing Strategist', 
+                company: 'Bonera Group',
+                period: '2018 - 2023', 
+                description: [
+                    'Pianificazione strategie digitali e gestione budget marketing.',
+                    'Sviluppo e gestione campagne commerciali omnicanale.',
+                    'Creazione reportistica e analisi delle performance.',
+                    'Sviluppo e gestione progetti di Marketing Automation.',
+                    'Ottimizzazione dei processi di lead generation.',
+                    'Creazione grafiche ATL+BTL.' 
+                ],
+                skills: ['Digital Strategy', 'Performance ADV', 'Marketing Automation', 'Lead Generation & CRM']
+            },
+            { 
+                title: 'Freelance Web & Digital Consultant',
+                company: 'Lavoro Autonomo', 
+                period: '2018 - Oggi',
+                description: [
+                    'Creazione di siti web per professionisti e PMI.',
+                    'Sviluppo di loghi e brand identity.',
+                    'Gestione dei contenuti e servizi fotografici/video.',
+                    'Social Media Management e campagne advertising.',
+                    'Servizi di consulenza strategica digitale.'
+                ],
+                skills: ['Graphic & Web Design', 'Digital Strategy', 'Performance ADV']
+            },
+             { 
+                title: 'Digital Media & Social media',
+                company: '1000 Miglia & AliSolidali',
+                period: '2015 - 2017',
+                description: [
+                    'Creazione di progetti di Corporate Social Responsibility.',
+                    'Sviluppo di Loghi e Brand Identity per iniziative benefiche.',
+                    'Gestione Campagne Social Media per eventi charity.',
+                    'Content Creator durante eventi e gara (1000Miglia Charity, etc.).'
+                ],
+                skills: ['Marketing & Comms', 'Graphic & Web Design']
+            },
+            { 
+                title: 'Graphic Designer e Social Media Manager',
+                company: 'Bonera Group',
+                period: '2015 - 2017',
+                description: [
+                    'Supporto grafico per materiali ATL e BTL.',
+                    'Gestione operativa dei canali social media aziendali.',
+                    'Creazione di contenuti foto e video.',
+                    'Supporto alla gestione di eventi e al sito web.',
+                    'Implementazione delle prime campagne di Digital e Email Marketing.'
+                ],
+                skills: ['Graphic & Web Design', 'Marketing & Comms']
+            },
+        ];
+
+        // Rimosso projectsData
+        // const projectsData = [ ... ];
+
+        // =================================================================
+        // CODICE PER IL FUNZIONAMENTO DELLA PAGINA
+        // =================================================================
+
+        let setActiveSectionGlobal;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const { jsPDF } = window.jspdf;
+            window.jsPDF = jsPDF; // Make jsPDF globally available
+
+            lucide.createIcons();
+            setupAccentColorRGB(); 
+            initTheme(); 
+            setActiveSectionGlobal = initNavigation(); 
+            initMobileMenu();
+            initPDFDownload(setActiveSectionGlobal); 
+            renderSkills();
+            renderSkillsStaticPDF(); // Popola div statico
+            renderExperience();
+        });
+        
+        function hexToRgb(hex) {
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function setupAccentColorRGB() {
+            try {
+                const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+                const rgb = hexToRgb(accentColor);
+                if (rgb) {
+                    document.documentElement.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+                }
+            } catch (e) {
+                console.error("Error setting accent RGB:", e);
+                 document.documentElement.style.setProperty('--accent-rgb', `0, 77, 64`); 
+            }
+        }
+
+        function initTheme() {
+             document.documentElement.classList.remove('dark'); 
+             localStorage.removeItem('theme'); 
+             setupAccentColorRGB(); 
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+            if(themeToggle) themeToggle.remove();
+            if(themeToggleMobile) themeToggleMobile.remove();
+        }
+
+        function initNavigation() {
+            const nav = document.getElementById('main-nav');
+            const indicator = document.getElementById('nav-indicator');
+            const allLinks = document.querySelectorAll('.nav-link, .nav-link-js'); 
+            const mobileLinks = document.querySelectorAll('.nav-link-mobile'); 
+            const sections = document.querySelectorAll('main > div > section'); 
+
+            function moveIndicator(targetLink) {
+                 if (!targetLink || !indicator || !nav) {
+                     if(indicator) indicator.style.opacity = '0'; 
+                    return;
+                }
+                
+                const span = targetLink.querySelector('span');
+                const elementForWidth = span || targetLink; 
+                
+                const navRect = nav.getBoundingClientRect();
+                const linkRect = targetLink.getBoundingClientRect(); 
+                
+                const indicatorWidth = elementForWidth.offsetWidth; 
+                
+                // Calculate left position to center the indicator under the text
+                const indicatorLeft = (linkRect.left - navRect.left) + (linkRect.width / 2) - (indicatorWidth / 2);
+
+                indicator.style.left = `${indicatorLeft}px`;
+                indicator.style.width = `${indicatorWidth}px`;
+                indicator.style.opacity = '1'; 
+            }
+
+            function setActiveSection(sectionId, isInitialLoad = false) {
+                 sections.forEach(s => {
+                    if (s.id === 'skills-pdf-static') return; 
+
+                    const isActive = s.id === sectionId;
+                    // Switch display immediately, no fade transition
+                    s.style.display = isActive ? 'block' : 'none'; 
+                    if(isActive) s.classList.add('active'); // Still add active class if needed elsewhere
+                    else s.classList.remove('active');
+                });
+                
+                let activeLink = null;
+                document.querySelectorAll('.nav-link').forEach(l => {
+                    const isActive = l.dataset.section === sectionId;
+                    l.classList.toggle('active', isActive);
+                    if (isActive) activeLink = l;
+                });
+                
+                mobileLinks.forEach(l => {
+                     l.classList.toggle('active', l.dataset.section === sectionId);
+                     if (l.dataset.section === sectionId) {
+                         l.classList.add('text-primary', 'bg-main'); 
+                     } else {
+                          l.classList.remove('text-primary', 'bg-main');
+                     }
+                });
+
+                // Move indicator immediately
+                 if (activeLink) {
+                        moveIndicator(activeLink);
+                    } else if (indicator) {
+                        indicator.style.opacity = '0'; 
+                        indicator.style.width = '0px';
+                    }
+
+
+                if (!isInitialLoad && history.pushState) {
+                    history.pushState(null, null, `#${sectionId}`);
+                } else if (!isInitialLoad) {
+                     window.location.hash = sectionId;
+                }
+                
+                const mobileMenu = document.getElementById('mobile-menu');
+                const openIcon = document.getElementById('menu-icon-open');
+                const closeIcon = document.getElementById('menu-icon-close');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                     if (openIcon) openIcon.classList.remove('hidden');
+                    if (closeIcon) closeIcon.classList.add('hidden');
+                     if(document.getElementById('mobile-menu-button')) {
+                         document.getElementById('mobile-menu-button').setAttribute('aria-expanded', 'false');
+                     }
+                }
+            }
+
+            [...allLinks, ...mobileLinks].forEach(link => {
+                 if (link.dataset.section) { 
+                     link.addEventListener('click', e => { 
+                        e.preventDefault(); 
+                        setActiveSection(link.dataset.section); 
+                    });
+                 }
+            });
+
+            const initialSection = window.location.hash.substring(1) || 'home';
+            setActiveSection(initialSection, true);
+
+             const handleResize = () => {
+                 const activeLink = document.querySelector('.nav-link.active');
+                 if (activeLink) moveIndicator(activeLink);
+             };
+             window.addEventListener('resize', handleResize);
+              // Ensure indicator is positioned correctly on load
+             setTimeout(() => {
+                 setActiveSection(initialSection, true);
+             }, 50);
+
+             return setActiveSection; 
+        }
+
+
+        function initMobileMenu() {
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('menu-icon-open');
+            const closeIcon = document.getElementById('menu-icon-close');
+
+             if (!menuButton || !mobileMenu || !openIcon || !closeIcon) return; 
+
+            menuButton.addEventListener('click', () => {
+                const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+                menuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                openIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+        }
+        
+       function initPDFDownload(setActiveSectionFn) {
+            const pdfButton = document.getElementById('pdf-button');
+             const pdfButtonMobile = document.getElementById('pdf-button-mobile');
+             if (!pdfButton || !pdfButtonMobile) return; 
+
+            const elementToCapture = document.querySelector('.print-area'); 
+
+             const generatePdf = async (button) => {
+                 const originalIconHTML = button.innerHTML; 
+                 button.innerHTML = '<i data-lucide="loader-2" class="h-5 w-5 animate-spin"></i>'; 
+                 lucide.createIcons(); 
+                 button.disabled = true;
+
+                // Prepara per cattura
+                document.body.classList.add('pdf-export-mode');
+                 // Mostra TUTTE le sezioni pdf-section per la cattura
+                document.querySelectorAll('.pdf-section').forEach(s => s.style.display = 'block'); 
+                 await new Promise(resolve => setTimeout(resolve, 250)); // Delay per render
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'p',
+                    unit: 'mm',
+                    format: 'a4',
+                    putOnlyUsedFonts: true, // Optimization
+                    floatPrecision: 16 // Default value
+                });
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const margin = 10; 
+                const contentWidth = pdfWidth - (margin * 2);
+                let currentY = margin; 
+
+                 // Usa html2canvas per catturare l'intero contenuto
+                 const canvas = await html2canvas(elementToCapture, {
+                     scale: 2, 
+                     useCORS: true,
+                     backgroundColor: '#ffffff', 
+                     scrollX: 0, 
+                     scrollY: 0, 
+                     windowWidth: elementToCapture.scrollWidth, 
+                     windowHeight: elementToCapture.scrollHeight, 
+                     onclone: (doc) => {
+                         doc.querySelectorAll('.no-pdf').forEach(el => el.style.display = 'none');
+                         doc.querySelectorAll('.pdf-section').forEach(s => { // Ensure sections are blocks in clone
+                             s.style.display = 'block';
+                             s.style.opacity = '1'; 
+                         }); 
+                         doc.body.classList.add('pdf-export-mode'); 
+                         doc.querySelectorAll('*').forEach(el => {
+                             el.style.transition = 'none'; 
+                             el.style.animation = 'none'; // Stop animations
+                         });
+                    }
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                const ratio = canvasWidth / canvasHeight;
+                let imgHeight = contentWidth / ratio;
+                let heightLeft = imgHeight;
+                let position = margin; 
+
+                // Aggiungi la prima pagina (o parte)
+                pdf.addImage(imgData, 'PNG', margin, position, contentWidth, imgHeight);
+                heightLeft -= (pdfHeight - margin * 2); 
+
+                // Aggiungi pagine successive se necessario
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + margin; 
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, contentWidth, imgHeight);
+                    heightLeft -= (pdfHeight - margin * 2);
+                }
+
+
+                // Ripristina stato normale
+                document.body.classList.remove('pdf-export-mode');
+                const currentHash = window.location.hash.substring(1) || 'home';
+                if(setActiveSectionFn) {
+                    document.querySelectorAll('.pdf-section').forEach(s => {
+                        if (s.id !== currentHash && s.id !== 'skills-pdf-static') s.style.display = 'none'; 
+                    });
+                     setActiveSectionFn(currentHash, true); 
+                }
+
+                pdf.save('CV_Giacomo_Casaccio.pdf');
+                
+                button.innerHTML = originalIconHTML; 
+                 lucide.createIcons(); 
+                 button.disabled = false;
+            };
+
+             pdfButton.addEventListener('click', () => generatePdf(pdfButton));
+             pdfButtonMobile.addEventListener('click', () => generatePdf(pdfButtonMobile)); 
+        }
+
+
+
+        function renderSkills() {
+            const listContainer = document.getElementById('skills-list');
+            if (!listContainer) return;
+            
+            const detailContent = document.getElementById('skill-details-content');
+            const detailIconContainer = document.getElementById('skill-detail-icon-container');
+            const detailTitle = document.getElementById('skill-detail-title');
+            const detailDescription = document.getElementById('skill-detail-description');
+            const detailTools = document.getElementById('skill-detail-tools');
+             if (!detailContent || !detailIconContainer || !detailTitle || !detailDescription || !detailTools) return; 
+
+
+            listContainer.innerHTML = '';
+
+            skillsData.forEach((skill, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <button class="skill-item w-full flex items-center text-left p-3 rounded-lg text-secondary hover:text-primary hover:bg-main transition-colors duration-200" data-index="${index}">
+                        <i data-lucide="${skill.icon}" class="mr-3 h-5 w-5 flex-shrink-0"></i>
+                        <span class="font-medium">${skill.title}</span>
+                    </button>
+                `;
+                listContainer.appendChild(listItem);
+            });
+
+            const skillButtons = listContainer.querySelectorAll('.skill-item');
+            function updateDetails(index) {
+                const skill = skillsData[index];
+                 if (!skill) return; 
+                detailContent.style.opacity = 0;
+                setTimeout(() => {
+                    detailIconContainer.innerHTML = `<i data-lucide="${skill.icon}" class="w-full h-full"></i>`;
+                    detailTitle.textContent = skill.title;
+                    detailDescription.textContent = skill.description;
+                    
+                    detailTools.innerHTML = ''; 
+                    if (skill.tools && skill.tools.length > 0) {
+                        skill.tools.forEach(tool => {
+                            const toolTag = document.createElement('span');
+                            toolTag.className = 'flex items-center bg-main text-dark font-medium px-3 py-1 rounded-md text-sm border border-default';
+                            toolTag.innerHTML = `<i data-lucide="terminal" class="w-4 h-4 mr-2 flex-shrink-0"></i> ${tool}`;
+                            detailTools.appendChild(toolTag);
+                        });
+                    } else {
+                         detailTools.innerHTML = '<p class="text-sm italic">Nessuno strumento specifico elencato.</p>';
+                    }
+                    
+                    lucide.createIcons(); 
+                    detailContent.style.opacity = 1;
+                }, 200); 
+                skillButtons.forEach((btn, i) => btn.classList.toggle('active', i === index));
+            }
+            skillButtons.forEach((button, index) => button.addEventListener('click', () => updateDetails(index)));
+            
+             if (skillsData.length > 0) {
+                updateDetails(0);
+            }
+            
+            lucide.createIcons(); 
+        }
+        
+         function renderSkillsStaticPDF() {
+            const container = document.getElementById('skills-pdf-static');
+            if (!container) return;
+            container.innerHTML = ''; 
+
+            skillsData.forEach(skill => {
+                const skillBlock = document.createElement('div');
+                skillBlock.className = 'skill-block'; 
+
+                const title = document.createElement('h4');
+                title.className = 'skill-title font-serif'; 
+                title.textContent = skill.title;
+                skillBlock.appendChild(title);
+
+                const description = document.createElement('p');
+                description.className = 'skill-description';
+                description.textContent = skill.description;
+                skillBlock.appendChild(description);
+
+                if (skill.tools && skill.tools.length > 0) {
+                    const toolsTitle = document.createElement('h5');
+                     toolsTitle.textContent = 'Strumenti:';
+                     toolsTitle.className = 'tools-title'; 
+                     skillBlock.appendChild(toolsTitle);
+
+                    const toolsList = document.createElement('ul');
+                    toolsList.className = 'skill-tools-list';
+                    skill.tools.forEach(tool => {
+                        const toolItem = document.createElement('li');
+                        toolItem.textContent = tool;
+                        toolsList.appendChild(toolItem);
+                    });
+                    skillBlock.appendChild(toolsList);
+                }
+                container.appendChild(skillBlock);
+            });
+         }
+
+        function renderExperience() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+            container.innerHTML = '';
+            experienceData.forEach((exp, index) => { 
+                const item = document.createElement('div');
+                item.className = 'mb-8 relative timeline-item'; 
+                
+                const descriptionList = exp.description.map(d => `<li class="flex items-start"><i data-lucide="check" class="w-4 h-4 mr-2 mt-1 text-accent flex-shrink-0"></i><span>${d}</span></li>`).join('');
+                
+                const skillsList = exp.skills.map(s => `<span class="text-xs font-semibold bg-main text-accent px-2 py-1 rounded-full border border-default">${s}</span>`).join('');
+
+                 const contentId = `exp-content-${index}`;
+
+                item.innerHTML = `
+                    <div id="${contentId}" class="bg-panel p-6 rounded-lg border border-default grid grid-cols-1 md:grid-cols-3 gap-6 ml-[-1.5rem] timeline-item-content relative"> 
+                         <div class="absolute w-5 h-5 rounded-full -left-[calc(1.5rem+1.25rem/2-3px)] top-6 timeline-dot border-4 no-pdf"></div> 
+                        <div class="md:col-span-1">
+                             <p class="text-sm font-medium text-accent">${exp.period}</p>
+                             <h3 class="text-xl font-bold section-title mt-1 font-serif">${exp.title}</h3>
+                             <p class="text-md font-semibold text-secondary">${exp.company}</p>
+                        </div>
+                        <div class="md:col-span-2">
+                             <ul class="space-y-2 text-secondary">${descriptionList}</ul>
+                             <div class="mt-4 border-t border-default pt-4 flex flex-wrap gap-2">
+                                ${skillsList}
+                             </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+
+            });
+            lucide.createIcons();
+        }
+
+        // Rimosso renderProjects()
+        /* function renderProjects() { ... } */
+        
+         window.addEventListener('load', () => {
+             const initialSection = window.location.hash.substring(1) || 'home';
+              if(setActiveSectionGlobal) {
+                  setActiveSectionGlobal(initialSection, true); 
+             }
+         });
+
+    </script>
+</body>
+</html>
+
