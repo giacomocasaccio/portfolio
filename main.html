@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Giacomo Casaccio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Font "Giornalistico" (Tinos=Titoli, Merriweather=Testi) -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- LIBRERIE PER PDF REINSERITE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            /* Palette Stile "Editoriale/Verde Scozia" */
+            --bg-primary: #ffffff; /* Bianco */
+            --bg-secondary: #fdfdfd; 
+            --text-primary: #111111; /* Nero */
+            --text-secondary: #555555; /* Grigio scuro */
+            --cta-bg: #004d40; /* Verde Scozia / Barbour */
+            --cta-hover: #00382e; 
+            --border-color: #e1e4e8; 
+            --accent-color: var(--cta-bg); 
+            --highlight-bg: rgba(0, 77, 64, 0.1); /* Sfondo evidenziatore verde chiaro */
+            --highlight-bg-print: #e6f3f0; /* Sfondo evidenziatore per stampa */
+        }
+
+        body {
+            font-family: 'Merriweather', serif; /* Font corpo graziato (Merriweather) */
+            background-color: #f0f0f0; 
+            color: var(--text-secondary);
+        }
+        
+        h1, h2, h3, h4, .font-serif {
+             font-family: 'Tinos', serif; /* Font titoli Tinos */
+             color: var(--text-primary);
+             font-weight: 700;
+        }
+
+        .text-accent { color: var(--accent-color); }
+        .border-accent { border-color: var(--border-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        .bg-panel { background-color: var(--bg-secondary); }
+        
+        /* Stile Evidenziatore - CORRETTO */
+        .highlight {
+            background-color: var(--highlight-bg);
+            padding: 0.1em 0.3em;
+            border-radius: 3px;
+            color: var(--text-primary); 
+            font-weight: 400; 
+            line-height: 1.6;
+            vertical-align: baseline; /* FIX: Allinea al testo */
+            display: inline; 
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        /* Stili Timeline (senza pallini) */
+        .timeline-container {
+            position: relative;
+        }
+        .experience-item {
+            position: relative;
+            page-break-inside: avoid;
+        }
+        .experience-item + .experience-item {
+             border-top: 1px solid var(--border-color);
+             padding-top: 1.5rem; 
+             margin-top: 1.5rem; 
+        }
+
+        .skill-block {
+             page-break-inside: avoid;
+        }
+
+        /* Tag Strumenti - CORRETTO */
+        .skill-tag {
+            display: inline-block; 
+            vertical-align: baseline; /* FIX: Allinea al testo */
+        }
+
+        /* Stili di stampa (per fallback Ctrl+P) e per nascondere bottone PDF */
+        @media print {
+            @page {
+                size: auto; 
+                margin: 1cm; 
+            }
+            body {
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                background-color: #ffffff !important; 
+                margin: 0;
+                padding: 0;
+            }
+            .no-print { display: none !important; }
+            .print-area {
+                min-height: 0 !important; 
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            .section-block, .skill-block, .experience-item {
+                page-break-inside: avoid;
+            }
+             .grid-print-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .skills-grid-print {
+                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .timeline-container {
+                padding-left: 0 !important; 
+                border-left: none !important; 
+            }
+             .experience-item + .experience-item {
+                 border-top: 1px solid var(--border-color) !important;
+             }
+             .text-accent { color: var(--accent-color) !important; }
+             h1, h2, h3, h4, .font-serif { color: var(--text-primary) !important; }
+             body, p, li { color: var(--text-secondary) !important; }
+             .text-primary { color: var(--text-primary) !important; }
+             .skill-tag {
+                 background-color: #f0f0f0 !important; 
+                 border: 1px solid #e0e0e0 !important;
+                 vertical-align: baseline !important; /* FIX Stampa */
+             }
+             /* Stampa evidenziatore */
+             .highlight {
+                background-color: var(--highlight-bg-print) !important;
+                color: var(--text-primary) !important;
+                padding: 0.1em 0.3em;
+                border-radius: 3px;
+                vertical-align: baseline !important; /* FIX Stampa */
+            }
+        }
+    </style>
+</head>
+<body class="bg-main flex justify-center p-4 md:p-8">
+
+    <!-- Pulsante Download PDF -->
+    <button id="download-pdf-btn" class="no-print fixed bottom-6 right-6 bg-accent text-white p-3 rounded-full shadow-lg hover:bg-cta-hover transition-colors z-50">
+        <i data-lucide="download" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Contenitore fluido, rimossa altezza minima fissa -->
+    <div class="print-area w-[210mm] max-w-full bg-white shadow-lg p-10 border border-gray-200">
+        
+        <!-- INTESTAZIONE -->
+        <header class="border-b pb-4 border-gray-300"> 
+            <h1 class="text-4xl font-bold text-primary">Giacomo Casaccio</h1>
+            <h2 class="text-xl font-normal text-secondary mt-2">Digital Marketing Strategist</h2>
+            
+            <div class="flex flex-wrap justify-start gap-x-6 gap-y-2 text-sm text-secondary mt-4"> 
+                <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent">
+                    <i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>
+                    giacomo.casaccio@gmail.com
+                </a>
+                <span class="flex items-center">
+                    <i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>
+                    333.1293314
+                </span>
+                <span class="flex items-center">
+                    <i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>
+                    Via Carera, 4 - Rovato (BS) 
+                </span>
+                <a href="https://www.linkedin.com" target="_blank" class="flex items-center hover:text-accent">
+                    <i data-lucide="linkedin" class="w-4 h-4 mr-1.5"></i>
+                    LinkedIn
+                </a>
+            </div>
+        </header>
+
+        <!-- Sezione Intro Full-Width -->
+        <div class="section-block mt-8 border-b border-gray-200 pb-8">
+            <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                <i data-lucide="user-round" class="w-5 h-5 mr-2"></i> 
+                Profilo Personale
+            </h3>
+            
+            <!-- Foto rimossa, testo a piena larghezza -->
+            <div class="space-y-3 text-sm leading-relaxed text-primary">
+                <p>
+                    Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.
+                </p>
+                <p>
+                    Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.
+                </p>
+                <p>
+                    Sono abituato a operare in contesti dinamici e a gestire progetti complessi, coordinando team interfunzionali e ottimizzando i budget per massimizzare il <span class="highlight">ritorno sull'investimento</span>. La mia esperienza spazia dalla lead generation B2C all'automazione dei processi, sempre con un focus sull'innovazione e il miglioramento continuo.
+                </p>
+            </div>
+        </div>
+
+        <!-- Corpo CV (colonna singola, le sezioni fluiscono) -->
+        <div class="mt-8">
+
+            <!-- COMPETENZE -->
+            <div class="section-block">
+                <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                    <i data-lucide="check-square" class="w-5 h-5 mr-2"></i> 
+                    Competenze & Strumenti
+                </h3>
+                
+                <div id="skills-static-container" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-8 gap-y-4 skills-grid-print">
+                    <!-- Contenuto generato da JS -->
+                </div>
+            </div>
+
+            
+            <!-- ESPERIENZA -->
+            <div class="section-block mt-8"> 
+                 <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 flex items-center">
+                    <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>
+                    Percorso
+                </h3>
+
+                <div id="timeline-container" class="timeline-container">
+                     <!-- Esperienze generate da JS -->
+                </div>
+            </div>
+        
+        </div> <!-- fine corpo colonna singola -->
+
+        <!-- CONTATTI (fondo pagina) -->
+         <div class="section-block mt-8 border-t border-gray-200 pt-6">
+             <h3 class="text-xl font-serif font-bold text-accent mb-4 text-center">Contatti</h3>
+             <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-secondary">
+                <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent">
+                    <i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>
+                    giacomo.casaccio@gmail.com
+                </a>
+                <span class="flex items-center">
+                    <i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>
+                    333.1293314
+                </span>
+                <span class="flex items-center">
+                    <i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>
+                    Via Carera, 4 - Rovato (BS)
+                </span>
+                <a href="https://www.linkedin.com" target="_blank" class="flex items-center hover:text-accent">
+                    <i data-lucide="linkedin" class="w-4 h-4 mr-1.5"></i>
+                    LinkedIn
+                </a>
+            </div>
+         </div>
+
+
+    </div> <!-- fine foglio A4 -->
+    
+
+    <script>
+        // =================================================================
+        // AREA DI PERSONALIZZAZIONE DEI CONTENUTI
+        // (Contenuti aggiornati come da tua ultima richiesta)
+        // =================================================================
+
+        const skillsData = [
+            { 
+                icon: 'compass', 
+                title: 'Digital Strategy', 
+                description: 'Dall\'analisi di mercato alla definizione di funnel e customer journey, costruisco piani d\'azione digitali che portano a risultati misurabili e sostenibili nel tempo.',
+                tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'Excel']
+            },
+            { 
+                icon: 'megaphone', 
+                title: 'Marketing & Comms', 
+                description: 'Gestisco la comunicazione integrata del brand, assicurando coerenza tra canali online e offline e costruendo una narrazione di marca forte e riconoscibile.',
+                tools: ['Mailchimp', 'Mailup', 'WordPress', 'Jira', 'Notion', 'Microsoft Project']
+            },
+            { 
+                icon: 'mouse-pointer-click', 
+                title: 'Performance ADV', 
+                description: 'Specialista in campagne a performance su Google Ads, Meta Ads e Bing Ads. Ottimizzo budget e creatività per massimizzare ROI, ROAS e CPL.',
+                tools: ['Google Ads', 'META Ads Suite', 'Google Tag Manager', 'Bing Ads'] 
+            },
+            { 
+                icon: 'palette', 
+                title: 'Graphic & Web Design', 
+                description: 'Progetto interfacce web e materiali di comunicazione (ATL/BTL) che uniscono estetica moderna e usabilità, mettendo sempre l\'esperienza utente al centro.',
+                tools: ['Adobe Photoshop', 'Adobe Illustrator', 'Adobe InDesign', 'Figma', 'FinalCut']
+            },
+            { 
+                icon: 'target', 
+                title: 'Lead Generation & CRM', 
+                description: 'Progetto e implemento sistemi di lead generation e ne gestisco il flusso all\'interno di software CRM per alimentare costantemente la pipeline di vendita.',
+                tools: ['Microsoft365', 'SugarCRM', 'Instapages', 'Zapier']
+            },
+            { 
+                icon: 'settings-2', 
+                title: 'Marketing Automation', 
+                description: 'Sviluppo flussi di automazione per il nurturing dei lead, la gestione del cliente e l\'ottimizzazione dei processi interni, migliorando efficienza e conversioni.',
+                tools: ['MicrosoftDynamics', 'ActiveCampaign']
+            }
+        ];
+
+        const experienceData = [
+             { 
+                title: 'Digital Sales & Marketing Specialist', 
+                company: 'Vivi Energia',
+                period: '2023 - Oggi',
+                description: [
+                    'Gestione delle vendite digitali e canali di acquisizione online.', 
+                    'Sviluppo e ottimizzazione campagne marketing (focus: Google Ads, Meta Ads, Bing Ads).', 
+                    'Analisi performance campagne e reporting (ROI, CPA, Conversion Rate).', 
+                    'Sviluppo e manutenzione del sito web aziendale.',
+                    'Implementazione strategie SEO e SEM.', 
+                    'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot su sito web.', 
+                    'Collaborazione con team Sales per allineamento strategie.' 
+                ],
+                skills: ['Digital Strategy', 'Performance ADV', 'Lead Generation & CRM', 'Graphic & Web Design', 'Marketing Automation'] 
+            },
+            { 
+                title: 'Digital Marketing Strategist', 
+                company: 'Bonera Group',
+                period: '2018 - 2023', 
+                description: [
+                    'Pianificazione strategie digitali e gestione budget marketing.',
+                    'Sviluppo e gestione campagne commerciali omnicanale.',
+                    'Creazione reportistica e analisi delle performance.',
+                    'Sviluppo e gestione progetti di Marketing Automation.',
+                    'Ottimizzazione dei processi di lead generation.',
+                    'Creazione grafiche ATL+BTL.' 
+                ],
+                skills: ['Digital Strategy', 'Performance ADV', 'Marketing Automation', 'Lead Generation & CRM']
+            },
+            { 
+                title: 'Freelance Web & Digital Consultant',
+                company: 'Lavoro Autonomo', 
+                period: '2018 - Oggi',
+                description: [
+                    'Creazione di siti web per professionisti e PMI.',
+                    'Sviluppo di loghi e brand identity.',
+                    'Gestione dei contenuti e servizi fotografici/video.',
+                    'Social Media Management e campagne advertising.',
+                    'Servizi di consulenza strategica digitale.'
+                ],
+                skills: ['Graphic & Web Design', 'Digital Strategy', 'Performance ADV']
+            },
+             { 
+                title: 'Digital Media & Social media',
+                company: '1000 Miglia & AliSolidali',
+                period: '2015 - 2017',
+                description: [
+                    'Creazione di progetti di Corporate Social Responsibility.',
+                    'Sviluppo di Loghi e Brand Identity per iniziative benefiche.',
+                    'Gestione Campagne Social Media per eventi charity.',
+                    'Content Creator eventi/gara (1000Miglia Charity, etc.).'
+                ],
+                skills: ['Marketing & Comms', 'Graphic & Web Design']
+            },
+            { 
+                title: 'Graphic Designer e Social Media Manager',
+                company: 'Bonera Group',
+                period: '2015 - 2017',
+                description: [
+                    'Supporto grafico per materiali ATL e BTL.',
+                    'Gestione operativa dei canali social media aziendali.',
+                    'Creazione di contenuti foto e video.',
+                    'Supporto alla gestione di eventi e al sito web.',
+                    'Implementazione delle prime campagne di Digital e Email Marketing.'
+                ],
+                skills: ['Graphic & Web Design', 'Marketing & Comms']
+            },
+        ];
+
+
+        // =================================================================
+        // CODICE PER IL FUNZIONAMENTO DELLA PAGINA
+        // =================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderSkillsStatic();
+            renderExperience();
+            initPDFDownload(); // Attiva la funzione del pulsante PDF
+        });
+        
+         // Funzione per popolare la versione statica delle skill
+         function renderSkillsStatic() {
+            const container = document.getElementById('skills-static-container');
+            if (!container) return;
+            container.innerHTML = ''; 
+
+            skillsData.forEach(skill => {
+                const skillBlock = document.createElement('div');
+                skillBlock.className = 'skill-block mb-4'; 
+
+                // Titolo con icona
+                const title = document.createElement('h4');
+                title.className = 'text-md font-serif font-bold text-primary mb-1 flex items-center'; 
+                title.innerHTML = `<i data-lucide="${skill.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${skill.title}`;
+                skillBlock.appendChild(title);
+
+                // Descrizione
+                const description = document.createElement('p');
+                description.className = 'text-xs text-secondary italic mb-2'; 
+                description.textContent = skill.description;
+                skillBlock.appendChild(description);
+                
+                // Strumenti
+                 if (skill.tools && skill.tools.length > 0) {
+                     const toolsContainer = document.createElement('div');
+                     toolsContainer.className = 'flex flex-wrap gap-1.5';
+                     skill.tools.forEach(tool => {
+                         const toolTag = document.createElement('span');
+                         toolTag.className = 'text-xs bg-gray-100 text-secondary px-2 py-0.5 rounded-full border border-gray-200 skill-tag';
+                         toolTag.textContent = tool;
+                         toolsContainer.appendChild(toolTag);
+                     });
+                     skillBlock.appendChild(toolsContainer);
+                 }
+
+                container.appendChild(skillBlock);
+            });
+             lucide.createIcons(); 
+         }
+
+        function renderExperience() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+            container.innerHTML = '';
+            experienceData.forEach((exp, index) => { // Aggiunto index
+                const item = document.createElement('div');
+                // Rimosso il pallino, aggiunta solo separatore
+                const borderClass = index === 0 ? '' : 'border-t border-gray-200 pt-6 mt-6';
+                item.className = `relative experience-item ${borderClass}`; 
+                
+                const descriptionList = exp.description.map(d => `<li class="flex items-start text-sm"><i data-lucide="check" class="w-3.5 h-3.5 mr-2 mt-0.5 text-accent flex-shrink-0"></i><span class="text-primary">${d}</span></li>`).join('');
+                
+                const skillsList = exp.skills.map(s => `<span class="text-xs font-medium bg-gray-100 text-accent px-2 py-0.5 rounded-full border border-gray-200 skill-tag">${s}</span>`).join('');
+
+                item.innerHTML = `
+                    <!-- Timeline dot rimosso -->
+                    <div class="timeline-item-content relative"> 
+                        <p class="text-sm font-semibold text-accent">${exp.period}</p>
+                         <h3 class="text-lg font-bold text-primary mt-0.5 font-serif">${exp.title}</h3>
+                         <p class="text-md font-semibold text-secondary mb-2">${exp.company}</p>
+                         
+                         <ul class="space-y-1.5">${descriptionList}</ul>
+                         
+                         <div class="mt-3 flex flex-wrap gap-2">
+                            ${skillsList}
+                         </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+        
+        // FUNZIONE PDF CORRETTA (LEGGERA E LUNGA)
+        function initPDFDownload() {
+            const pdfButton = document.getElementById('download-pdf-btn');
+            const elementToCapture = document.querySelector('.print-area'); 
+            if (!pdfButton || !elementToCapture) return;
+            
+            const { jsPDF } = window.jspdf;
+
+            pdfButton.addEventListener('click', async () => {
+                const originalIcon = pdfButton.innerHTML;
+                pdfButton.innerHTML = '<i data-lucide="loader-2" class="w-6 h-6 animate-spin"></i>';
+                lucide.createIcons();
+                pdfButton.disabled = true;
+
+                // Nascondi il pulsante per lo screenshot
+                pdfButton.style.display = 'none';
+                
+                // Salva lo stile originale
+                const originalStyles = {
+                    bodyBg: document.body.style.backgroundColor,
+                    areaBg: elementToCapture.style.backgroundColor,
+                    areaShadow: elementToCapture.style.boxShadow,
+                    areaBorder: elementToCapture.style.border
+                };
+
+                // FIX PDF LEGGERO: Applica stili temporanei per la cattura
+                document.body.style.backgroundColor = '#ffffff';
+                elementToCapture.style.backgroundColor = '#ffffff';
+                elementToCapture.style.boxShadow = 'none';
+                elementToCapture.style.border = 'none';
+
+                await new Promise(resolve => setTimeout(resolve, 100)); // Aspetta che il DOM applichi gli stili
+
+                const canvas = await html2canvas(elementToCapture, {
+                    scale: 2, // Scala 2x per testo nitido
+                    useCORS: true,
+                    backgroundColor: '#ffffff', // Sfondo bianco
+                    width: elementToCapture.scrollWidth, 
+                    height: elementToCapture.scrollHeight
+                });
+
+                // Ripristina stili originali
+                pdfButton.style.display = 'flex';
+                document.body.style.backgroundColor = originalStyles.bodyBg;
+                elementToCapture.style.backgroundColor = originalStyles.areaBg;
+                elementToCapture.style.boxShadow = originalStyles.areaShadow;
+                elementToCapture.style.border = originalStyles.areaBorder;
+                
+                const imgData = canvas.toDataURL('image/jpeg', 0.7); // Usa JPEG qualità 70%
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                
+                const pdfWidth = 210; // A4 width in mm
+                const pdfHeight = (canvasHeight * pdfWidth) / canvasWidth; 
+                
+                const pdf = new jsPDF({
+                    orientation: 'p',
+                    unit: 'mm',
+                    format: [pdfWidth, pdfHeight] // Formato personalizzato lungo
+                });
+
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('CV_Giacomo_Casaccio.pdf');
+
+                // Ripristina il pulsante
+                pdfButton.innerHTML = originalIcon;
+                lucide.createIcons();
+                pdfButton.disabled = false;
+            });
+        }
+
+    </script>
+</body>
+</html>
+
