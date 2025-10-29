@@ -7,466 +7,281 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Font "Giornalistico" (Tinos=Titoli, Merriweather=Testi) -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- LIBRERIE PDF (html2canvas, jspdf) RIMOSSE -->
     <style>
         :root {
-            /* Palette Stile "Editoriale/Verde Scozia" */
-            --bg-primary: #ffffff; /* Bianco */
-            --bg-secondary: #fdfdfd; 
-            --text-primary: #111111; /* Nero */
-            --text-secondary: #555555; /* Grigio scuro */
-            --cta-bg: #004d40; /* Verde Scozia / Barbour */
-            --cta-hover: #00382e; 
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --accent-color: #004d40; /* Verde Scozia */
             --border-color: #e1e4e8; 
-            --accent-color: var(--cta-bg); 
-            --highlight-bg: rgba(0, 77, 64, 0.1); /* Sfondo evidenziatore verde chiaro */
-            --highlight-bg-print: #e6f3f0; /* Sfondo evidenziatore per stampa */
+            --highlight-bg: rgba(0, 77, 64, 0.1);
+            --highlight-bg-print: #e6f3f0;
         }
 
         body {
-            font-family: 'Merriweather', serif; /* Font corpo graziato (Merriweather) */
+            font-family: 'Merriweather', serif;
             background-color: #f0f0f0; 
             color: var(--text-secondary);
         }
         
         h1, h2, h3, h4, .font-serif {
-             font-family: 'Tinos', serif; /* Font titoli Tinos */
+             font-family: 'Tinos', serif;
              color: var(--text-primary);
              font-weight: 700;
         }
 
         .text-accent { color: var(--accent-color); }
-        .border-accent { border-color: var(--border-color); }
-        .bg-accent { background-color: var(--accent-color); }
-        .bg-panel { background-color: var(--bg-secondary); }
-        
-        /* Stile Evidenziatore - CORRETTO */
         .highlight {
             background-color: var(--highlight-bg);
             padding: 0.1em 0.3em;
             border-radius: 3px;
-            color: var(--text-primary); 
-            font-weight: 400; 
-            line-height: 1.6;
-            vertical-align: baseline; /* FIX: Allinea al testo */
+            color: var(--text-primary);
             display: inline; 
             box-decoration-break: clone;
             -webkit-box-decoration-break: clone;
         }
 
-        /* Stili Timeline (senza pallini) */
-        .timeline-container {
-            position: relative;
-        }
-        .experience-item {
-            position: relative;
-            page-break-inside: avoid;
-        }
         .experience-item + .experience-item {
              border-top: 1px solid var(--border-color);
-             padding-top: 1.5rem; 
-             margin-top: 1.5rem; 
+             padding-top: 1.25rem; 
+             margin-top: 1.25rem; 
         }
 
-        .skill-block {
+        .section-block, .skill-block, .experience-item {
              page-break-inside: avoid;
-        }
-
-        /* Tag Strumenti - CORRETTO */
-        .skill-tag {
-            display: inline-block; 
-            vertical-align: baseline; /* FIX: Allinea al testo */
         }
 
         /* Stili di stampa per A4 */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 1.5cm; /* Margini di stampa */
+                margin: 1.5cm;
             }
             body {
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
                 background-color: #ffffff !important; 
-                margin: 0;
-                padding: 0;
+                margin: 0; padding: 0;
             }
-            .no-print { display: none !important; }
             .print-area {
-                min-height: 0 !important; 
                 box-shadow: none !important;
                 border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
+                padding: 0 !important; margin: 0 !important;
                 width: 100% !important;
             }
+            .print-footer { display: none !important; }
+
+            /* Layout a due colonne per competenze e certificazioni */
+            .skills-certs-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
             
-            /* Forza interruzione di pagina per la Pagina 2 */
-            #experience-section {
-                page-break-before: always;
-            }
-            .section-block, .skill-block, .experience-item {
-                page-break-inside: avoid;
-            }
-             .grid-print-cols-2 {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            .skills-grid-print {
-                 grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            .timeline-container {
-                padding-left: 0 !important; 
-                border-left: none !important; 
-            }
-             .experience-item + .experience-item {
-                 border-top: 1px solid var(--border-color) !important;
-             }
-             .text-accent { color: var(--accent-color) !important; }
-             h1, h2, h3, h4, .font-serif { color: var(--text-primary) !important; }
-             body, p, li { color: var(--text-secondary) !important; }
-             .text-primary { color: var(--text-primary) !important; }
-             
-             /* Riduci font per adattare a 2 pagine */
-             body {
-                font-size: 9.5pt;
-                line-height: 1.4;
-             }
-             h1 { font-size: 30pt; }
-             h2 { font-size: 16pt; }
-             h3 { font-size: 14pt; }
-             h4 { font-size: 10pt; }
-             .text-sm { font-size: 9.5pt; }
-             .text-xs { font-size: 8.5pt; }
-             .skill-tag {
-                 font-size: 8pt;
+            /* Riduzione spaziature per compattare */
+            .section-block { margin-top: 1.25rem !important; }
+            header { padding-bottom: 0.75rem !important; }
+            h3 { margin-bottom: 0.75rem !important; }
+            
+            /* Stili tipografici compatti */
+            body { font-size: 9.5pt; line-height: 1.4; }
+            h1 { font-size: 26pt; }
+            h2 { font-size: 14pt; }
+            h3 { font-size: 13pt; }
+            h4 { font-size: 10pt; }
+            .text-sm { font-size: 9.5pt; }
+            .text-xs { font-size: 8pt; }
+            .skill-tag {
+                 font-size: 7.5pt !important;
                  background-color: #f0f0f0 !important; 
                  border: 1px solid #e0e0e0 !important;
-                 vertical-align: baseline !important; /* FIX Stampa */
-             }
-             .highlight {
+                 padding: 1px 6px !important;
+            }
+            .highlight {
                 background-color: var(--highlight-bg-print) !important;
                 color: var(--text-primary) !important;
-                vertical-align: baseline !important; /* FIX Stampa */
             }
         }
     </style>
 </head>
-<body class="bg-main flex justify-center p-4 md:p-8">
+<body class="flex justify-center p-4 md:p-8">
 
-    <!-- Rimosso Pulsante Download PDF -->
-
-    <!-- Contenitore fluido, rimossa altezza minima fissa -->
     <div class="print-area w-[210mm] max-w-full bg-white shadow-lg p-10 border border-gray-200">
         
-        <!-- ########## PAGINA 1 ########## -->
-
-        <!-- INTESTAZIONE -->
         <header class="border-b pb-4 border-gray-300"> 
             <h1 class="text-4xl font-bold text-primary">Giacomo Casaccio</h1>
             <h2 class="text-xl font-normal text-secondary mt-2">Digital Marketing Strategist</h2>
             
-            <div class="flex flex-wrap justify-start gap-x-6 gap-y-2 text-sm text-secondary mt-4"> 
-                <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent">
-                    <i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>
-                    giacomo.casaccio@gmail.com
-                </a>
-                <span class="flex items-center">
-                    <i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>
-                    333.1293314
-                </span>
-                <span class="flex items-center">
-                    <i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>
-                    Rovato (BS) 
-                </span>
-                <a href="https://www.linkedin.com/in/giacomo-casaccio-0b980967/?originalSubdomain=it" target="_blank" class="flex items-center hover:text-accent">
-                    <i data-lucide="linkedin" class="w-4 h-4 mr-1.5"></i>
-                    LinkedIn
-                </a>
+            <div class="flex flex-wrap justify-start items-center gap-x-6 gap-y-2 text-sm text-secondary mt-4"> 
+                <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent"><i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>giacomo.casaccio@gmail.com</a>
+                <span class="flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>333.1293314</span>
+                <span class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>Rovato (BS)</span>
+                <a href="https://www.linkedin.com/in/giacomo-casaccio-0b980967" target="_blank" class="flex items-center hover:text-accent"><i data-lucide="linkedin" class="w-4 h-4 mr-1.5"></i>LinkedIn</a>
+                <a href="https://giacomocasaccio.github.io/portfolio/" target="_blank" class="flex items-center font-bold hover:text-accent text-accent"><i data-lucide="globe" class="w-4 h-4 mr-1.5"></i>Portfolio Online</a>
             </div>
         </header>
-
-        <!-- Sezione Intro Full-Width -->
-        <div class="section-block mt-8 border-b border-gray-200 pb-8">
+        
+        <div class="section-block mt-6">
             <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
-                <i data-lucide="user-round" class="w-5 h-5 mr-2"></i> 
-                Profilo Personale
+                <i data-lucide="user-round" class="w-5 h-5 mr-2"></i>Profilo Professionale
             </h3>
-            
-            <!-- Foto rimossa, testo a piena larghezza -->
             <div class="space-y-3 text-sm leading-relaxed text-primary">
-                <p>
-                    Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.
-                </p>
-                <p>
-                    Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.
-                </p>
-                <p>
-                    Sono abituato a operare in contesti dinamici e a gestire progetti complessi, coordinando team interfunzionali e ottimizzando i budget per massimizzare il <span class="highlight">ritorno sull'investimento</span>. La mia esperienza spazia dalla lead generation B2C all'automazione dei processi, sempre con un focus sull'innovazione e il miglioramento continuo.
-                </p>
+                <p>Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.</p>
+                <p>Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.</p>
             </div>
         </div>
 
-        <!-- Corpo CV (colonna singola, le sezioni fluiscono) -->
-        <div class="mt-8">
-
-            <!-- COMPETENZE -->
+        <div class="skills-certs-grid mt-6">
             <div class="section-block">
                 <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
-                    <i data-lucide="check-square" class="w-5 h-5 mr-2"></i> 
-                    Competenze & Strumenti
+                    <i data-lucide="check-square" class="w-5 h-5 mr-2"></i>Competenze
                 </h3>
-                
-                <div id="skills-static-container" class="grid grid-cols-1 md:grid-cols-2 md:gap-x-8 gap-y-4 skills-grid-print">
-                    <!-- Contenuto generato da JS -->
-                </div>
+                <div id="skills-static-container" class="space-y-4">
+                    </div>
             </div>
-
-            
-            <!-- ESPERIENZA -->
-            <!-- Aggiunto ID per forzare l'interruzione di pagina -->
-            <div id="experience-section" class="section-block mt-8"> 
-                 <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 flex items-center">
-                    <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>
-                    Percorso
+            <div class="section-block">
+                <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                    <i data-lucide="award" class="w-5 h-5 mr-2"></i>Certificazioni
                 </h3>
-
-                <div id="timeline-container" class="timeline-container">
-                     <!-- Esperienze generate da JS -->
-                </div>
+                <div id="certifications-container" class="space-y-4">
+                    </div>
             </div>
+        </div>
+
+        <div class="section-block mt-6"> 
+             <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 flex items-center">
+                <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>Percorso Professionale
+            </h3>
+            <div id="timeline-container">
+                 </div>
+        </div>
         
-        </div> <!-- fine corpo colonna singola -->
+        <div class="print-footer mt-8 text-center text-xs text-gray-400">
+            Autorizzo il trattamento dei miei dati personali ai sensi del Dlgs 196 del 30 giugno 2003 e dell'art. 13 GDPR.
+        </div>
 
-        <!-- CONTATTI (fondo pagina) -->
-         <div class="section-block mt-8 border-t border-gray-200 pt-6">
-             <h3 class="text-xl font-serif font-bold text-accent mb-4 text-center">Contatti</h3>
-             <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-secondary">
-                <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent">
-                    <i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>
-                    giacomo.casaccio@gmail.com
-                </a>
-                <span class="flex items-center">
-                    <i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>
-                    333.1293314
-                </span>
-                <span class="flex items-center">
-                    <i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>
-                    Rovato (BS)
-                </span>
-                <a href="https://www.linkedin.com/in/giacomo-casaccio-0b980967/?originalSubdomain=it" target="_blank" class="flex items-center hover:text-accent">
-                    <i data-lucide="linkedin" class="w-4 h-4 mr-1.5"></i>
-                    LinkedIn
-                </a>
-            </div>
-         </div>
-
-
-    </div> <!-- fine foglio A4 -->
+    </div>
     
-
     <script>
         // =================================================================
-        // AREA DI PERSONALIZZAZIONE DEI CONTENUTI
-        // (Contenuti aggiornati come da tua ultima richiesta)
+        // DATABASE DEI CONTENUTI (VERSIONE ESAUSTIVA)
         // =================================================================
 
         const skillsData = [
-            { 
-                icon: 'compass', 
-                title: 'Digital Strategy', 
-                description: 'Dall\'analisi di mercato alla definizione di funnel e customer journey, costruisco piani d\'azione digitali che portano a risultati misurabili e sostenibili nel tempo.',
-                tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'Excel']
-            },
-            { 
-                icon: 'megaphone', 
-                title: 'Marketing & Comms', 
-                description: 'Gestisco la comunicazione integrata del brand, assicurando coerenza tra canali online e offline e costruendo una narrazione di marca forte e riconoscibile.',
-                tools: ['Mailchimp', 'Mailup', 'WordPress', 'Jira', 'Notion', 'Microsoft Project']
-            },
-            { 
-                icon: 'mouse-pointer-click', 
-                title: 'Performance ADV', 
-                description: 'Specialista in campagne a performance su Google Ads, Meta Ads e Bing Ads. Ottimizzo budget e creatività per massimizzare ROI, ROAS e CPL.',
-                tools: ['Google Ads', 'META Ads Suite', 'Google Tag Manager', 'Bing Ads'] 
-            },
-            { 
-                icon: 'palette', 
-                title: 'Graphic & Web Design', 
-                description: 'Progetto interfacce web e materiali di comunicazione (ATL/BTL) che uniscono estetica moderna e usabilità, mettendo sempre l\'esperienza utente al centro.',
-                tools: ['Adobe Photoshop', 'Adobe Illustrator', 'Adobe InDesign', 'Figma', 'FinalCut']
-            },
-            { 
-                icon: 'target', 
-                title: 'Lead Generation & CRM', 
-                description: 'Progetto e implemento sistemi di lead generation e ne gestisco il flusso all\'interno di software CRM per alimentare costantemente la pipeline di vendita.',
-                tools: ['Microsoft365', 'SugarCRM', 'Instapages', 'Zapier']
-            },
-            { 
-                icon: 'settings-2', 
-                title: 'Marketing Automation', 
-                description: 'Sviluppo flussi di automazione per il nurturing dei lead, la gestione del cliente e l\'ottimizzazione dei processi interni, migliorando efficienza e conversioni.',
-                tools: ['MicrosoftDynamics', 'ActiveCampaign']
-            }
+            { icon: 'compass', title: 'Digital Strategy', tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'ADLOOP'] },
+            { icon: 'brain-circuit', title: 'AI Integration', tools: ['Generative AI', 'ChatGPT', 'Gemini', 'API Integration'] },
+            { icon: 'mouse-pointer-click', title: 'Performance ADV', tools: ['Google Ads', 'META Ads Suite', 'GTM', 'Bing Ads'] },
+            { icon: 'palette', title: 'Graphic & Web Design', tools: ['Adobe Photoshop', 'Illustrator', 'InDesign', 'Figma'] },
+            { icon: 'target', title: 'Lead Generation & CRM', tools: ['Microsoft365', 'SugarCRM', 'Instapages', 'Zapier'] },
+            { icon: 'settings-2', title: 'Marketing Automation', tools: ['MicrosoftDynamics', 'ActiveCampaign'] }
+        ];
+
+        const certificationsData = [
+            { icon: 'check-circle', title: 'Google Ads (Rete di Ricerca)', description: 'Gestione e ottimizzazione avanzata di campagne sulla rete di ricerca Google.' },
+            { icon: 'check-circle', title: 'Meta Certified Associate', description: 'Creazione e gestione di campagne pubblicitarie efficaci su Meta.' },
+            { icon: 'shield-check', title: 'Commanders Act Fundamentals', description: 'Utilizzo di CDP per la gestione del consenso (CMP) e l\'orchestrazione dei dati.' },
+            { icon: 'bar-chart-3', title: 'Adloop Certified Professional', description: 'Analisi, attribuzione e ottimizzazione del budget per massimizzare il ROAS.' }
         ];
 
         const experienceData = [
              { 
                 title: 'Digital Sales & Marketing Specialist', 
-                company: 'Vivi Energia',
-                period: '2023 - Oggi',
+                company: 'Vivi Energia', period: '2023 - Oggi',
                 description: [
                     'Gestione delle vendite digitali e canali di acquisizione online.', 
                     'Sviluppo e ottimizzazione campagne marketing (focus: Google Ads, Meta Ads, Bing Ads).', 
                     'Analisi performance campagne e reporting (ROI, CPA, Conversion Rate).', 
-                    'Sviluppo e manutenzione del sito web aziendale.',
-                    'Implementazione strategie SEO e SEM.', 
-                    'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot su sito web.', 
-                    'Collaborazione con team Sales per allineamento strategie.' 
+                    'Sviluppo e manutenzione del sito web aziendale e implementazione strategie SEO/SEM.', 
+                    'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot.'
                 ],
-                skills: ['Digital Strategy', 'Performance ADV', 'Lead Generation & CRM', 'Graphic & Web Design', 'Marketing Automation'] 
             },
             { 
                 title: 'Digital Marketing Strategist', 
-                company: 'Bonera Group',
-                period: '2018 - 2023', 
+                company: 'Bonera Group', period: '2018 - 2023', 
                 description: [
                     'Pianificazione strategie digitali e gestione budget marketing.',
                     'Sviluppo e gestione campagne commerciali omnicanale.',
-                    'Creazione reportistica e analisi delle performance.',
-                    'Sviluppo e gestione progetti di Marketing Automation.',
-                    'Ottimizzazione dei processi di lead generation.',
-                    'Creazione grafiche ATL+BTL.' 
+                    'Creazione reportistica, analisi delle performance e ottimizzazione dei processi di lead generation.',
+                    'Sviluppo e gestione progetti di Marketing Automation e creazione grafiche ATL/BTL.' 
                 ],
-                skills: ['Digital Strategy', 'Performance ADV', 'Marketing Automation', 'Lead Generation & CRM']
             },
             { 
                 title: 'Freelance Web & Digital Consultant',
-                company: 'Lavoro Autonomo', 
-                period: '2018 - Oggi',
+                company: 'Lavoro Autonomo', period: '2018 - Oggi',
                 description: [
                     'Creazione di siti web per professionisti e PMI.',
                     'Sviluppo di loghi e brand identity.',
-                    'Gestione dei contenuti e servizi fotografici/video.',
-                    'Social Media Management e campagne advertising.',
-                    'Servizi di consulenza strategica digitale.'
+                    'Gestione dei contenuti, servizi fotografici/video e Social Media Management.'
                 ],
-                skills: ['Graphic & Web Design', 'Digital Strategy', 'Performance ADV']
             },
              { 
-                title: 'Digital Media & Social media',
-                company: '1000 Miglia & AliSolidali',
-                period: '2015 - 2017',
+                title: 'Digital & Social Media',
+                company: '1000 Miglia & AliSolidali', period: '2015 - 2017',
                 description: [
                     'Creazione di progetti di Corporate Social Responsibility.',
                     'Sviluppo di Loghi e Brand Identity per iniziative benefiche.',
-                    'Gestione Campagne Social Media per eventi charity.',
-                    'Content Creator eventi/gara (1000Miglia Charity, etc.).'
+                    'Gestione Campagne Social Media per eventi charity e Content Creator per eventi/gara.'
                 ],
-                skills: ['Marketing & Comms', 'Graphic & Web Design']
-            },
-            { 
-                title: 'Graphic Designer e Social Media Manager',
-                company: 'Bonera Group',
-                period: '2015 - 2017',
-                description: [
-                    'Supporto grafico per materiali ATL e BTL.',
-                    'Gestione operativa dei canali social media aziendali.',
-                    'Creazione di contenuti foto e video.',
-                    'Supporto alla gestione di eventi e al sito web.',
-                    'Implementazione delle prime campagne di Digital e Email Marketing.'
-                ],
-                skills: ['Graphic & Web Design', 'Marketing & Comms']
-            },
+            }
         ];
 
-
         // =================================================================
-        // CODICE PER IL FUNZIONAMENTO DELLA PAGINA
+        // LOGICA DI RENDER
         // =================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             renderSkillsStatic();
+            renderCertifications();
             renderExperience();
         });
         
-         // Funzione per popolare la versione statica delle skill
          function renderSkillsStatic() {
             const container = document.getElementById('skills-static-container');
             if (!container) return;
-            container.innerHTML = ''; 
+            container.innerHTML = skillsData.map(skill => `
+                <div class="skill-block">
+                    <h4 class="text-md font-serif font-bold text-primary mb-1.5 flex items-center">
+                        <i data-lucide="${skill.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${skill.title}
+                    </h4>
+                    <div class="flex flex-wrap gap-1.5">
+                        ${skill.tools.map(tool => `<span class="text-xs bg-gray-100 text-secondary px-2 py-0.5 rounded-full border border-gray-200 skill-tag">${tool}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons(); 
+         }
 
-            skillsData.forEach(skill => {
-                const skillBlock = document.createElement('div');
-                skillBlock.className = 'skill-block mb-4'; 
-
-                // Titolo con icona
-                const title = document.createElement('h4');
-                title.className = 'text-md font-serif font-bold text-primary mb-1 flex items-center'; 
-                title.innerHTML = `<i data-lucide="${skill.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${skill.title}`;
-                skillBlock.appendChild(title);
-
-                // Descrizione
-                const description = document.createElement('p');
-                description.className = 'text-xs text-secondary italic mb-2'; 
-                description.textContent = skill.description;
-                skillBlock.appendChild(description);
-                
-                // Strumenti
-                 if (skill.tools && skill.tools.length > 0) {
-                     const toolsContainer = document.createElement('div');
-                     toolsContainer.className = 'flex flex-wrap gap-1.5';
-                     skill.tools.forEach(tool => {
-                         const toolTag = document.createElement('span');
-                         toolTag.className = 'text-xs bg-gray-100 text-secondary px-2 py-0.5 rounded-full border border-gray-200 skill-tag';
-                         toolTag.textContent = tool;
-                         toolsContainer.appendChild(toolTag);
-                     });
-                     skillBlock.appendChild(toolsContainer);
-                 }
-
-                container.appendChild(skillBlock);
-            });
-             lucide.createIcons(); 
+         function renderCertifications() {
+            const container = document.getElementById('certifications-container');
+            if (!container) return;
+            container.innerHTML = certificationsData.map(cert => `
+                <div class="skill-block">
+                    <h4 class="text-md font-serif font-bold text-primary mb-1 flex items-center">
+                        <i data-lucide="${cert.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${cert.title}
+                    </h4>
+                    <p class="text-xs text-secondary italic">${cert.description}</p>
+                </div>
+            `).join('');
+            lucide.createIcons(); 
          }
 
         function renderExperience() {
             const container = document.getElementById('timeline-container');
             if (!container) return;
-            container.innerHTML = '';
-            experienceData.forEach((exp, index) => { // Aggiunto index
-                const item = document.createElement('div');
-                // Rimosso il pallino, aggiunta solo separatore
-                const borderClass = index === 0 ? '' : 'border-t border-gray-200 pt-6 mt-6';
-                item.className = `relative experience-item ${borderClass}`; 
-                
-                const descriptionList = exp.description.map(d => `<li class="flex items-start text-sm"><i data-lucide="check" class="w-3.5 h-3.5 mr-2 mt-0.5 text-accent flex-shrink-0"></i><span class="text-primary">${d}</span></li>`).join('');
-                
-                const skillsList = exp.skills.map(s => `<span class="text-xs font-medium bg-gray-100 text-accent px-2 py-0.5 rounded-full border border-gray-200 skill-tag">${s}</span>`).join('');
-
-                item.innerHTML = `
-                    <!-- Timeline dot rimosso -->
-                    <div class="timeline-item-content relative"> 
-                        <p class="text-sm font-semibold text-accent">${exp.period}</p>
-                         <h3 class="text-lg font-bold text-primary mt-0.5 font-serif">${exp.title}</h3>
-                         <p class="text-md font-semibold text-secondary mb-2">${exp.company}</p>
-                         
-                         <ul class="space-y-1.5">${descriptionList}</ul>
-                         
-                         <div class="mt-3 flex flex-wrap gap-2">
-                            ${skillsList}
-                         </div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
+            container.innerHTML = experienceData.map(exp => `
+                <div class="experience-item"> 
+                    <p class="text-sm font-semibold text-accent">${exp.period}</p>
+                    <h3 class="text-lg font-bold text-primary mt-0.5 font-serif">${exp.title}</h3>
+                    <p class="text-md font-semibold text-secondary mb-3">${exp.company}</p>
+                    <ul class="space-y-1.5">
+                        ${exp.description.map(d => `<li class="flex items-start text-sm"><i data-lucide="check" class="w-3.5 h-3.5 mr-2 mt-1 text-accent flex-shrink-0"></i><span class="text-primary">${d}</span></li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
             lucide.createIcons();
         }
-        
     </script>
 </body>
 </html>
-
