@@ -466,6 +466,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="#certificazioni" class="nav-link">
+                        <i data-lucide="award"></i> <span>Corsi e Certificazioni</span>
+                    </a>
+                </li>
+                <li>
                     <a href="https://giacomocasaccio.github.io/portfolio/CV%20Giacomo%20Casaccio.pdf" target="_blank" class="nav-link">
                         <i data-lucide="download"></i>
                         <span>Scarica CV</span>
@@ -510,7 +515,8 @@
             </div>
         </nav>
 
-        <main id="main-content"> <section id="profilo" class="active-section">
+        <main id="main-content">
+            <section id="profilo" class="active-section">
                 
                 <div class="profile-header">
                     <div class="profile-image-placeholder">
@@ -538,6 +544,20 @@
                         Sono abituato a operare in contesti dinamici e a gestire progetti complessi, coordinando team interfunzionali e ottimizzando i budget per massimizzare il <span class="highlight">ritorno sull'investimento</span>. La mia esperienza spazia dalla lead generation B2C all'automazione dei processi, sempre con un focus sull'innovazione e il miglioramento continuo.
                     </p>
                 </div>
+
+                <h3 class="section-title mt-10">
+                    <i data-lucide="heart"></i>
+                    Interessi e Passioni
+                </h3>
+                
+                <div class="space-y-4 text-base leading-relaxed text-primary border border-border-color rounded-xl p-5 content-card skill-card-print">
+                    <p>
+                        Al di là del mondo digitale, coltivo passioni che nutrono la mia creatività e il mio equilibrio. Sono un appassionato di <span class="highlight">fotografia</span>, sempre alla ricerca dello scatto perfetto che racconti una storia. Il <span class="highlight">design</span> in tutte le sue forme, dall'architettura al product design, mi affascina per la sua capacità di unire estetica e funzione.
+                    </p>
+                    <p>
+                        Seguo con interesse le evoluzioni della <span class="highlight">moda</span> e della <span class="highlight">tecnologia</span>, due mondi apparentemente distanti ma sempre più interconnessi. Infine, trovo ispirazione e tranquillità nel contatto con la <span class="highlight">natura</span>, che considero la più grande fonte di bellezza e innovazione.
+                    </p>
+                </div>
             </section>
 
             <section id="competenze">
@@ -546,7 +566,7 @@
                 </h3>
                 
                 <div id="skills-container" class="space-y-6">
-                    </div>
+                </div>
             </section>
 
             <section id="esperienze">
@@ -555,7 +575,17 @@
                 </h3>
                 
                 <div id="experience-container" class="space-y-6">
-                    </div>
+                </div>
+            </section>
+
+            <section id="certificazioni">
+                <h3 class="section-title">
+                    <i data-lucide="award"></i>
+                    Corsi e Certificazioni
+                </h3>
+                
+                <div id="certifications-container" class="space-y-6">
+                </div>
             </section>
 
         </main>
@@ -572,6 +602,12 @@
                 title: 'Digital Strategy', 
                 description: 'Dall\'analisi di mercato alla definizione di funnel e customer journey, costruisco piani d\'azione digitali che portano a risultati misurabili e sostenibili nel tempo.',
                 tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'Excel']
+            },
+            { 
+                icon: 'brain-circuit', 
+                title: 'AI Integration & Development', 
+                description: 'Utilizzo l\'AI generativa (ChatGPT, Gemini, etc.) per integrare soluzioni intelligenti nei sistemi aziendali, creare tool per l\'ottimizzazione dei processi e potenziare lo sviluppo di siti web e applicazioni.',
+                tools: ['Generative AI', 'ChatGPT', 'Gemini', 'Perplexity', 'API Integration']
             },
             { 
                 icon: 'megaphone', 
@@ -675,6 +711,27 @@
             },
         ];
 
+        const certificationsData = [
+            { 
+                icon: 'check-circle', 
+                title: 'Certificazione Google Ads sulla Rete di Ricerca', 
+                description: 'Competenza avanzata nella creazione, gestione e ottimizzazione di campagne sulla rete di ricerca di Google per massimizzare la visibilità e il ROI.',
+                tools: ['Google Ads', 'Keyword Planning', 'Performance Max', 'Analytics']
+            },
+            { 
+                icon: 'check-circle', 
+                title: 'Meta Certified Digital Marketing Associate', 
+                description: 'Abilità comprovata nella creazione e gestione di campagne pubblicitarie efficaci su Meta (Facebook, Instagram) per raggiungere obiettivi di marketing specifici.',
+                tools: ['META Ads Suite', 'Business Manager', 'Audience Insights', 'Pixel']
+            },
+            { 
+                icon: 'shield-check', 
+                title: 'Commanders Act Fundamentals', 
+                description: 'Conoscenza approfondita della piattaforma di Customer Data Platform (CDP) per la gestione del consenso (CMP), l\'orchestrazione dei dati e l\'attivazione di campagne marketing data-driven nel rispetto della privacy.',
+                tools: ['CDP', 'CMP', 'Tag Management', 'Data Privacy']
+            }
+        ];
+
         // =================================================================
         // LOGICA DI RENDER E INTERATTIVITÀ
         // =================================================================
@@ -684,6 +741,7 @@
             setupNavigation();
             renderSkills();
             renderExperience();
+            renderCertifications();
             setupThemeToggle();
             setupMobileMenu();
             
@@ -892,6 +950,32 @@
                     </div>
                 `;
                 container.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        // Render Certificazioni
+        function renderCertifications() {
+            const container = document.getElementById('certifications-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            certificationsData.forEach(cert => {
+                const toolsHtml = cert.tools.map(tool => `<span class="skill-tag">${tool}</span>`).join('');
+                
+                const card = document.createElement('div');
+                card.className = 'border border-border-color rounded-xl p-5 content-card skill-card-print'; 
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 mb-3">
+                        <i data-lucide="${cert.icon}" class="w-5 h-5 text-accent flex-shrink-0"></i>
+                        <h4 class="text-lg font-bold text-primary">${cert.title}</h4>
+                    </div>
+                    <p class="text-sm mb-4">${cert.description}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${toolsHtml}
+                    </div>
+                `;
+                container.appendChild(card);
             });
             lucide.createIcons();
         }
