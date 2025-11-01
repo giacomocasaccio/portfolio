@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Giacomo Casaccio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --accent-color: #004d40; /* Verde Scozia */
+            --border-color: #e1e4e8; 
+            --highlight-bg: rgba(0, 77, 64, 0.1);
+            --highlight-bg-print: #e6f3f0;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #f0f0f0; 
+            color: var(--text-secondary);
+        }
+        
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Tinos', serif;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .text-accent { color: var(--accent-color); }
+        .highlight {
+            background-color: var(--highlight-bg);
+            padding: 0.1em 0.3em;
+            border-radius: 3px;
+            color: var(--text-primary);
+            display: inline; 
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .experience-item + .experience-item {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.25rem; 
+            margin-top: 1.25rem; 
+        }
+
+        .section-block, .skill-block, .experience-item {
+            page-break-inside: avoid;
+        }
+
+        /* Stili di stampa per A4 */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 1.5cm;
+            }
+            body {
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                background-color: #ffffff !important; 
+                margin: 0; padding: 0;
+            }
+            .print-area {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important; margin: 0 !important;
+                width: 100% !important;
+            }
+            .print-footer { display: none !important; }
+
+            /* MODIFICA: La griglia a due colonne ora è nel layout principale,
+               quindi la griglia specifica per skills-certs non è più necessaria qui. */
+            
+            /* Riduzione spaziature per compattare */
+            .section-block { margin-top: 1.25rem !important; }
+            header { padding-bottom: 0.75rem !important; }
+            h3 { margin-bottom: 0.75rem !important; }
+            
+            /* Stili tipografici compatti */
+            body { font-size: 9.5pt; line-height: 1.4; }
+            h1 { font-size: 26pt; }
+            h2 { font-size: 14pt; }
+            h3 { font-size: 13pt; }
+            h4 { font-size: 10pt; }
+            .text-sm { font-size: 9.5pt; }
+            .text-xs { font-size: 8pt; }
+            .skill-tag {
+                font-size: 7.5pt !important;
+                background-color: #f0f0f0 !important; 
+                border: 1px solid #e0e0e0 !important;
+                padding: 1px 6px !important;
+            }
+            .highlight {
+                background-color: var(--highlight-bg-print) !important;
+                color: var(--text-primary) !important;
+            }
+        }
+    </style>
+</head>
+<body class="flex justify-center p-4 md:p-8">
+
+    <div class="print-area w-[210mm] max-w-full bg-white shadow-lg p-10 border border-gray-200">
+        
+        <header class="border-b pb-4 border-gray-300"> 
+            <h1 class="text-4xl font-bold text-primary">Giacomo Casaccio</h1>
+            <h2 class="text-xl font-normal text-secondary mt-2">Digital Marketing Strategist</h2>
+            
+            <div class="flex flex-wrap justify-start items-center gap-x-6 gap-y-2 text-sm text-secondary mt-4"> 
+                <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent"><i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>giacomo.casaccio@gmail.com</a>
+                <span class="flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>333.1293314</span>
+                <span class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>Rovato (BS)</span>
+                <a href="https://www.linkedin.com/in/giacomo-casaccio-0b980967" target="_blank" class="flex items-center hover:text-accent"><i data-lucide="linkedin" class="w-4 h-4 mr-1.5"></i>LinkedIn</a>
+                <a href="https://giacomocasaccio.github.io/portfolio/" target="_blank" class="flex items-center font-bold hover:text-accent text-accent"><i data-lucide="globe" class="w-4 h-4 mr-1.5"></i>Portfolio Online</a>
+            </div>
+        </header>
+        
+        <div class="section-block mt-6">
+            <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                <i data-lucide="user-round" class="w-5 h-5 mr-2"></i>Profilo Professionale
+            </h3>
+            <div class="space-y-3 text-sm leading-relaxed text-primary">
+                <p>Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.</p>
+                <p>Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.</p>
+            </div>
+        </div>
+
+        <!-- ========= NUOVA STRUTTURA A DUE COLONNE ========= -->
+        <!-- Questa griglia organizza le sezioni rimanenti in due colonne
+             per ottimizzare lo spazio verticale. -->
+        <div class="grid grid-cols-12 gap-x-8 mt-6">
+
+            <!-- COLONNA SINISTRA (7/12) - PERCORSO PROFESSIONALE -->
+            <div class="col-span-7 section-block"> 
+                <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 flex items-center">
+                    <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>Percorso Professionale
+                </h3>
+                <div id="timeline-container">
+                    <!-- Il contenuto delle esperienze viene inserito qui da JS -->
+                </div>
+            </div>
+
+            <!-- COLONNA DESTRA (5/12) - COMPETENZE E CERTIFICAZIONI -->
+            <div class="col-span-5 space-y-6">
+                <!-- Blocco Competenze -->
+                <div class="section-block">
+                    <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                        <i data-lucide="check-square" class="w-5 h-5 mr-2"></i>Competenze
+                    </h3>
+                    <div id="skills-static-container" class="space-y-4">
+                        <!-- Il contenuto delle competenze viene inserito qui da JS -->
+                    </div>
+                </div>
+
+                <!-- Blocco Certificazioni -->
+                <div class="section-block">
+                    <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                        <i data-lucide="award" class="w-5 h-5 mr-2"></i>Certificazioni
+                    </h3>
+                    <div id="certifications-container" class="space-y-4">
+                        <!-- Il contenuto delle certificazioni viene inserito qui da JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ========= FINE NUOVA STRUTTURA A DUE COLONNE ========= -->
+        
+        <div class="print-footer mt-8 text-center text-xs text-gray-400">
+            Autorizzo il trattamento dei miei dati personali ai sensi del Dlgs 196 del 30 giugno 2003 e dell'art. 13 GDPR.
+        </div>
+
+    </div>
+    
+    <script>
+        // =================================================================
+        // DATABASE DEI CONTENUTI (VERSIONE ESAUSTIVA)
+        // =================================================================
+
+        const skillsData = [
+            { icon: 'compass', title: 'Digital Strategy', tools: ['Google Analytics', 'Looker Studio', 'SimilarWeb', 'ADLOOP'] },
+            { icon: 'brain-circuit', title: 'AI Integration', tools: ['Generative AI', 'ChatGPT', 'Gemini', 'API Integration'] },
+            { icon: 'mouse-pointer-click', title: 'Performance ADV', tools: ['Google Ads', 'META Ads Suite', 'GTM', 'Bing Ads'] },
+            { icon: 'palette', title: 'Graphic & Web Design', tools: ['Adobe Photoshop', 'Illustrator', 'InDesign', 'Figma'] },
+            { icon: 'target', title: 'Lead Generation & CRM', tools: ['Microsoft365', 'SugarCRM', 'Instapages', 'Zapier'] },
+            { icon: 'settings-2', title: 'Marketing Automation', tools: ['MicrosoftDynamics', 'ActiveCampaign'] }
+        ];
+
+        const certificationsData = [
+            { icon: 'check-circle', title: 'Google Ads (Rete di Ricerca)', description: 'Gestione e ottimizzazione avanzata di campagne sulla rete di ricerca Google.' },
+            { icon: 'check-circle', title: 'Meta Certified Associate', description: 'Creazione e gestione di campagne pubblicitarie efficaci su Meta.' },
+            { icon: 'shield-check', title: 'Commanders Act Fundamentals', description: 'Utilizzo di CDP per la gestione del consenso (CMP) e l\'orchestrazione dei dati.' },
+            { icon: 'bar-chart-3', title: 'Adloop Certified Professional', description: 'Analisi, attribuzione e ottimizzazione del budget per massimizzare il ROAS.' }
+        ];
+
+        const experienceData = [
+             { 
+                title: 'Digital Sales & Marketing Specialist', 
+                company: 'Vivi Energia', period: '2023 - Oggi',
+                description: [
+                    'Gestione delle vendite digitali e canali di acquisizione online.', 
+                    'Sviluppo e ottimizzazione campagne marketing (focus: Google Ads, Meta Ads, Bing Ads).', 
+                    'Analisi performance campagne e reporting (ROI, CPA, Conversion Rate).', 
+                    'Sviluppo e manutenzione del sito web aziendale e implementazione strategie SEO/SEM.', 
+                    'Progetti con AI generativa: Sviluppo codice assistito e implementazione chatbot.'
+                ],
+            },
+            { 
+                title: 'Digital Marketing Strategist', 
+                company: 'Bonera Group', period: '2018 - 2023', 
+                description: [
+                    'Pianificazione strategie digitali e gestione budget marketing.',
+                    'Sviluppo e gestione campagne commerciali omnicanale.',
+                    'Creazione reportistica, analisi delle performance e ottimizzazione dei processi di lead generation.',
+                    'Sviluppo e gestione progetti di Marketing Automation e creazione grafiche ATL/BTL.' 
+                ],
+            },
+            { 
+                title: 'Freelance Web & Digital Consultant',
+                company: 'Lavoro Autonomo', period: '2018 - Oggi',
+                description: [
+                    'Creazione di siti web per professionisti e PMI.',
+                    'Sviluppo di loghi e brand identity.',
+                    'Gestione dei contenuti, servizi fotografici/video e Social Media Management.'
+                ],
+            },
+             { 
+                title: 'Digital & Social Media',
+                company: '1000 Miglia & AliSolidali', period: '2015 - 2017',
+                description: [
+                    'Creazione di progetti di Corporate Social Responsibility.',
+                    'Sviluppo di Loghi e Brand Identity per iniziative benefiche.',
+                    'Gestione Campagne Social Media per eventi charity e Content Creator per eventi/gara.'
+                ],
+            }
+        ];
+
+        // =================================================================
+        // LOGICA DI RENDER
+        // =================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderSkillsStatic();
+            renderCertifications();
+            renderExperience();
+        });
+        
+         function renderSkillsStatic() {
+            const container = document.getElementById('skills-static-container');
+            if (!container) return;
+            container.innerHTML = skillsData.map(skill => `
+                <div class="skill-block">
+                    <h4 class="text-md font-serif font-bold text-primary mb-1.5 flex items-center">
+                        <i data-lucide="${skill.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${skill.title}
+                    </h4>
+                    <div class="flex flex-wrap gap-1.5">
+                        ${skill.tools.map(tool => `<span class="text-xs bg-gray-100 text-secondary px-2 py-0.5 rounded-full border border-gray-200 skill-tag">${tool}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons(); 
+         }
+
+         function renderCertifications() {
+            const container = document.getElementById('certifications-container');
+            if (!container) return;
+            container.innerHTML = certificationsData.map(cert => `
+                <div class="skill-block">
+                    <h4 class="text-md font-serif font-bold text-primary mb-1 flex items-center">
+                        <i data-lucide="${cert.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${cert.title}
+                    </h4>
+                    <p class="text-xs text-secondary italic">${cert.description}</p>
+                </div>
+            `).join('');
+            lucide.createIcons(); 
+         }
+
+        function renderExperience() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+            container.innerHTML = experienceData.map(exp => `
+                <div class="experience-item"> 
+                    <p class="text-sm font-semibold text-accent">${exp.period}</p>
+                    <h3 class="text-lg font-bold text-primary mt-0.5 font-serif">${exp.title}</h3>
+                    <p class="text-md font-semibold text-secondary mb-3">${exp.company}</p>
+                    <ul class="space-y-1.5">
+                        ${exp.description.map(d => `<li class="flex items-start text-sm"><i data-lucide="check" class="w-3.5 h-3.5 mr-2 mt-1 text-accent flex-shrink-0"></i><span class="text-primary">${d}</span></li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
