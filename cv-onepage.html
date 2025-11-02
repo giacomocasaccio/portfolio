@@ -43,6 +43,7 @@
         }
 
         .experience-item + .experience-item {
+            /* Ridotto lo spazio per la stampa */
             border-top: 1px solid var(--border-color);
             padding-top: 1.25rem; 
             margin-top: 1.25rem; 
@@ -71,17 +72,14 @@
                 width: 100% !important;
             }
             .print-footer { display: none !important; }
-
-            /* MODIFICA: La griglia a due colonne ora è nel layout principale,
-               quindi la griglia specifica per skills-certs non è più necessaria qui. */
             
             /* Riduzione spaziature per compattare */
-            .section-block { margin-top: 1.25rem !important; }
-            header { padding-bottom: 0.75rem !important; }
-            h3 { margin-bottom: 0.75rem !important; }
+            .section-block { margin-top: 1.1rem !important; }
+            header { padding-bottom: 0.6rem !important; }
+            h3 { margin-bottom: 0.6rem !important; }
             
             /* Stili tipografici compatti */
-            body { font-size: 9.5pt; line-height: 1.4; }
+            body { font-size: 9.5pt; line-height: 1.35; } /* Interlinea ridotta */
             h1 { font-size: 26pt; }
             h2 { font-size: 14pt; }
             h3 { font-size: 13pt; }
@@ -98,6 +96,12 @@
                 background-color: var(--highlight-bg-print) !important;
                 color: var(--text-primary) !important;
             }
+
+            /* Spaziatura esperienza ridotta per stampa */
+            .experience-item + .experience-item {
+                padding-top: 1rem; 
+                margin-top: 1rem; 
+            }
         }
     </style>
 </head>
@@ -105,11 +109,11 @@
 
     <div class="print-area w-[210mm] max-w-full bg-white shadow-lg p-10 border border-gray-200">
         
-        <header class="border-b pb-4 border-gray-300"> 
+        <header class="border-b pb-4 print:pb-2 border-gray-300"> 
             <h1 class="text-4xl font-bold text-primary">Giacomo Casaccio</h1>
             <h2 class="text-xl font-normal text-secondary mt-2">Digital Marketing Strategist</h2>
             
-            <div class="flex flex-wrap justify-start items-center gap-x-6 gap-y-2 text-sm text-secondary mt-4"> 
+            <div class="flex flex-wrap justify-start items-center gap-x-6 gap-y-2 text-sm text-secondary mt-4 print:mt-2"> 
                 <a href="mailto:giacomo.casaccio@gmail.com" class="flex items-center hover:text-accent"><i data-lucide="mail" class="w-4 h-4 mr-1.5"></i>giacomo.casaccio@gmail.com</a>
                 <span class="flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-1.5"></i>333.1293314</span>
                 <span class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1.5"></i>Rovato (BS)</span>
@@ -118,24 +122,22 @@
             </div>
         </header>
         
-        <div class="section-block mt-6">
-            <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+        <div class="section-block mt-6 print:mt-4">
+            <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 print:mb-2 flex items-center">
                 <i data-lucide="user-round" class="w-5 h-5 mr-2"></i>Profilo Professionale
             </h3>
-            <div class="space-y-3 text-sm leading-relaxed text-primary">
+            <div class="space-y-3 print:space-y-1.5 text-sm leading-relaxed text-primary">
                 <p>Con un background consolidato in Progettazione Artistica e una specializzazione in Digital Marketing, ho costruito la mia carriera sull'intersezione tra <span class="highlight">creatività e tecnologia</span>. La mia filosofia professionale si basa sulla convinzione che un'idea creativa richieda una <span class="highlight">strategia misurabile</span> per generare impatto, e che i dati debbano informare, senza limitare, l'intuizione.</p>
                 <p>Approccio il mio ruolo come un <span class="highlight">"traduttore strategico"</span>: converto obiettivi di business in campagne efficaci, analisi complesse in decisioni chiare e interazioni digitali in relazioni di valore. Sono convinto che il successo si costruisca con dedizione, curiosità e la capacità di guardare oltre i confini di una singola disciplina.</p>
             </div>
         </div>
 
         <!-- ========= NUOVA STRUTTURA A DUE COLONNE ========= -->
-        <!-- Questa griglia organizza le sezioni rimanenti in due colonne
-             per ottimizzare lo spazio verticale. -->
-        <div class="grid grid-cols-12 gap-x-8 mt-6">
+        <div class="grid grid-cols-12 gap-x-8 print:gap-x-5 mt-6 print:mt-4">
 
             <!-- COLONNA SINISTRA (7/12) - PERCORSO PROFESSIONALE -->
             <div class="col-span-7 section-block"> 
-                <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 flex items-center">
+                <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-6 print:mb-3 flex items-center">
                     <i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>Percorso Professionale
                 </h3>
                 <div id="timeline-container">
@@ -144,23 +146,23 @@
             </div>
 
             <!-- COLONNA DESTRA (5/12) - COMPETENZE E CERTIFICAZIONI -->
-            <div class="col-span-5 space-y-6">
+            <div class="col-span-5 space-y-6 print:space-y-4">
                 <!-- Blocco Competenze -->
                 <div class="section-block">
-                    <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                    <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 print:mb-2 flex items-center">
                         <i data-lucide="check-square" class="w-5 h-5 mr-2"></i>Competenze
                     </h3>
-                    <div id="skills-static-container" class="space-y-4">
+                    <div id="skills-static-container" class="space-y-4 print:space-y-3">
                         <!-- Il contenuto delle competenze viene inserito qui da JS -->
                     </div>
                 </div>
 
                 <!-- Blocco Certificazioni -->
                 <div class="section-block">
-                    <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 flex items-center">
+                    <h3 class="text-xl font-serif font-bold text-accent border-b-2 border-accent pb-1 mb-4 print:mb-2 flex items-center">
                         <i data-lucide="award" class="w-5 h-5 mr-2"></i>Certificazioni
                     </h3>
-                    <div id="certifications-container" class="space-y-4">
+                    <div id="certifications-container" class="space-y-4 print:space-y-3">
                         <!-- Il contenuto delle certificazioni viene inserito qui da JS -->
                     </div>
                 </div>
@@ -253,10 +255,10 @@
             if (!container) return;
             container.innerHTML = skillsData.map(skill => `
                 <div class="skill-block">
-                    <h4 class="text-md font-serif font-bold text-primary mb-1.5 flex items-center">
+                    <h4 class="text-md font-serif font-bold text-primary mb-1.5 print:mb-1 flex items-center">
                         <i data-lucide="${skill.icon}" class="w-4 h-4 mr-2 text-accent flex-shrink-0"></i>${skill.title}
                     </h4>
-                    <div class="flex flex-wrap gap-1.5">
+                    <div class="flex flex-wrap gap-1.5 print:gap-1">
                         ${skill.tools.map(tool => `<span class="text-xs bg-gray-100 text-secondary px-2 py-0.5 rounded-full border border-gray-200 skill-tag">${tool}</span>`).join('')}
                     </div>
                 </div>
@@ -285,8 +287,8 @@
                 <div class="experience-item"> 
                     <p class="text-sm font-semibold text-accent">${exp.period}</p>
                     <h3 class="text-lg font-bold text-primary mt-0.5 font-serif">${exp.title}</h3>
-                    <p class="text-md font-semibold text-secondary mb-3">${exp.company}</p>
-                    <ul class="space-y-1.5">
+                    <p class="text-md font-semibold text-secondary mb-3 print:mb-1.5">${exp.company}</p>
+                    <ul class="space-y-1.5 print:space-y-1">
                         ${exp.description.map(d => `<li class="flex items-start text-sm"><i data-lucide="check" class="w-3.5 h-3.5 mr-2 mt-1 text-accent flex-shrink-0"></i><span class="text-primary">${d}</span></li>`).join('')}
                     </ul>
                 </div>
