@@ -71,7 +71,7 @@
                 padding: 0 !important; margin: 0 !important;
                 width: 100% !important;
             }
-            .print-footer { display: none !important; }
+            /* MODIFICA: Rimossa la riga che nascondeva il footer */
             
             /* Riduzione spaziature per compattare */
             .section-block { margin-top: 1rem !important; }
@@ -107,7 +107,8 @@
 </head>
 <body class="flex justify-center p-4 md:p-8">
 
-    <div class="print-area w-[210mm] max-w-full bg-white shadow-lg p-10 border border-gray-200">
+    <!-- MODIFICA: Rimossa larghezza fissa w-[210mm] e aggiunta w-full max-w-5xl per una migliore responsività -->
+    <div class="print-area w-full max-w-5xl bg-white shadow-lg p-10 border border-gray-200">
         
         <header class="border-b pb-4 print:pb-2 border-gray-300"> 
             <!-- MODIFICA: Layout a due colonne per l'intestazione -->
@@ -315,5 +316,6 @@
     </script>
 </body>
 </html>
+
 
 
